@@ -3,21 +3,41 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Vault HQ</title>
+    <title>Movie Vault HQ - Collection</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>Movie Vault HQ</h1>
-
-        <!-- Movie Cards will be dynamically inserted here -->
-        <div id="movie-list"></div>
-
+        <h1>Movie Vault HQ Collection</h1>
+        <div id="movie-grid" class="movie-grid"></div>
         <footer>
             <p>Follow us on Telegram: <a href="https://t.me/movievaultHQ">@movievaultHQ</a></p>
         </footer>
     </div>
 
-    <script src="script-index.js"></script>
+    <script>
+        const sheetUrl = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv";
+
+        fetch(sheetUrl)
+            .then(response => response.text())
+            .then(data => {
+                const rows = data.split("\n").slice(1);
+                const movieGrid = document.getElementById("movie-grid");
+
+                rows.forEach(row => {
+                    const [id, title, year, poster, streamLink, downloadLink] = row.split(",").map(item => item.trim());
+                    
+                    const movieCard = `
+                        <div class="movie-card">
+                            <img src="${poster}" alt="${title} Poster">
+                            <h2>${title} (${year})</h2>
+                            <a href="movie.html?id=${id}" class="btn">View Details</a>
+                        </div>`;
+                    
+                    movieGrid.innerHTML += movieCard;
+                });
+            })
+            .catch(error => console.error("Error loading movies:", error));
+    </script>
 </body>
 </html>
