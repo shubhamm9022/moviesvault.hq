@@ -1,4 +1,4 @@
-Logo and Title Styling */
+/* Logo and Title Styling */
 .logo-title {
     display: flex;
     align-items: center;
@@ -219,7 +219,7 @@ footer a:hover {
         transform: translateY(0);
         opacity: 1;
     }
-    #movie-title.error {
-    color: #ff4d4d;
 }
+#movie-title.error {
+    color: #ff4d4d;
 }
