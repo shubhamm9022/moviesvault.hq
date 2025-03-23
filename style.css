@@ -1,4 +1,25 @@
-/* Basic Reset */
+Logo and Title Styling */
+.logo-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    animation: slideInDown 1s ease-out;
+}
+
+.logo-title img {
+    height: 60px;
+    width: auto;
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* Adjust title when paired with logo */
+.logo-title h1 {
+    font-size: 2.5em;
+    letter-spacing: 2px;
+    margin: 0;
+}/* Basic Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -37,39 +58,31 @@ h1 {
     animation: fadeInUp 1s ease-in-out forwards;
 }
 
-/* Movie List Styling */
-#movie-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-}
-
-.movie-item {
+/* Movie Card Styling */
+.movie-card {
     background: #222;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
-    width: 150px;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-    text-decoration: none;
-    color: #fff;
 }
 
-.movie-item img {
+/* Smooth Hover Effect for Movie Card */
+.movie-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.2);
+}
+
+/* Movie Poster Styling */
+.movie-card img {
     width: 100%;
     border-radius: 10px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     transition: transform 0.3s ease;
 }
 
-.movie-item:hover {
-    transform: scale(1.05);
-    box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
-}
-
-.movie-item:hover img {
+/* Image Hover Effect */
+.movie-card:hover img {
     transform: scale(1.1);
 }
 
@@ -78,6 +91,14 @@ h2 {
     font-size: 1.5em;
     margin-bottom: 10px;
     animation: fadeInUp 1s ease-in-out 0.5s forwards;
+}
+
+/* Button Container Styling */
+.buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 10px;
 }
 
 /* Button Styling */
@@ -91,14 +112,17 @@ h2 {
     animation: fadeInUp 1s ease-in-out 0.7s forwards;
 }
 
+/* Stream Button Color */
 .stream {
     background-color: #4CAF50;
 }
 
+/* Download Button Color */
 .download {
     background-color: #2196F3;
 }
 
+/* Button Hover Effects */
 .btn:hover {
     transform: translateY(-3px) scale(1.05);
     opacity: 0.9;
@@ -112,17 +136,21 @@ footer {
     animation: fadeInUp 1s ease-in-out 1s forwards;
 }
 
+/* Footer Link Styling */
 footer a {
     color: #4CAF50;
     text-decoration: none;
     transition: color 0.3s ease;
 }
 
+/* Footer Link Hover Effect */
 footer a:hover {
     color: #2196F3;
 }
 
-/* Mobile-Friendly Styles */
+/* ============================= */
+/* 📱 Mobile-Friendly Styles */
+/* ============================= */
 @media (max-width: 480px) {
     h1 {
         font-size: 1.8em;
@@ -132,27 +160,66 @@ footer a:hover {
         width: 95%;
     }
 
-    .movie-item {
-        width: 120px;
+    .movie-card {
+        padding: 15px;
     }
 
     h2 {
         font-size: 1.2em;
     }
+
+    .buttons {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px 0;
+    }
+
+    footer {
+        font-size: 0.8em;
+    }
 }
 
-/* Keyframe Animations */
+/* ============================= */
+/* 🌟 Keyframe Animations */
+/* ============================= */
+
+/* Fade-in Animation */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
+/* Slide-in from Top Animation */
 @keyframes slideInDown {
-    from { transform: translateY(-50px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
+/* Fade-in Up Animation */
 @keyframes fadeInUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    #movie-title.error {
+    color: #ff4d4d;
+}
 }
