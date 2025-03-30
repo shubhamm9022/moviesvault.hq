@@ -34,5 +34,39 @@
     </footer>
 
     <script src="admin.js"></script>
+    <script>
+    const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs"; 
+    const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";
+    const sheetName = "Sheet1"; // Change if your sheet name is different
+
+    async function addMovie() {
+        const movieName = document.getElementById("movieName").value;
+        const movieYear = document.getElementById("movieYear").value;
+        const movieDesc = document.getElementById("movieDesc").value;
+        const moviePoster = document.getElementById("moviePoster").value;
+        const movieStream = document.getElementById("movieStream").value;
+        const movieDownload = document.getElementById("movieDownload").value;
+
+        const values = [
+            [movieName, movieYear, movieDesc, moviePoster, movieStream, movieDownload, new Date().toLocaleString()]
+        ];
+
+        const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}!A1:F1:append?valueInputOption=RAW&key=${apiKey}`;
+
+        const response = await fetch(url, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ values })
+        });
+
+        if (response.ok) {
+            alert("Movie added successfully!");
+        } else {
+            alert("Error adding movie.");
+        }
+    }
+</script>
 </body>
 </html>
