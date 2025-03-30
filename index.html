@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html><html lang="en">
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Vault</title>
@@ -8,22 +9,20 @@
 <body>
     <header>
         <div class="logo-container">
-            <img src="logo.png" alt="MoviesVault.HQ Logo" class="logo" style="max-width: 350px; height: auto; display: block; margin: auto;">
+            <img src="logo.png" alt="MoviesVault.HQ Logo" class="logo">
         </div>
-        <div class="search-bar" style="display: flex; align-items: center; gap: 10px;">
-            <input type="text" id="searchInput" placeholder="Search movies..." style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-            <button onclick="searchMovies()" style="padding: 8px 12px; border: none; background-color: #007bff; color: white; border-radius: 5px; cursor: pointer;">Search</button>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search movies...">
+            <button onclick="searchMovies()">Search</button>
         </div>
-    </header>
-    <div id="update-box" class="hidden">
+    </header><div id="update-box" class="hidden">
     <p id="update-message">This is an important update.</p>
     <button onclick="closeUpdateBox()">Close</button>
-    </div>
+</div>
 
 <section id="movie-list">
     <!-- Movies will be loaded here dynamically -->
 </section>
-
 <div class="pagination">
     <button id="prevPage">Previous</button>
     <button id="nextPage">Next</button>
@@ -32,13 +31,31 @@
 <footer>
     <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
     <nav>
-        <a href="dmca.html" style="color: white; transition: color 0.3s ease-in-out;">▸DMCA</a>
-        <a href="request.html" style="color: white; transition: color 0.3s ease-in-out;">▸Request</a>
-        <a href="how-to-download.html" style="color: white; transition: color 0.3s ease-in-out;">▸How to DL</a>
+        <a href="dmca.html">DMCA</a>
+        <a href="request.html">Request</a>
+        <a href="how-to-download.html">How to DL</a>
     </nav>
 </footer>
 
 <script type="module" src="app.js"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const updateBox = document.getElementById("update-box");
+        const updateMessage = document.getElementById("update-message");
+        
+        const adminUpdateText = "🔥 New movies added today! Check them out now."; // Change this when you add updates
+
+        if (localStorage.getItem("latestUpdate") !== adminUpdateText) {
+            updateMessage.textContent = adminUpdateText;
+            updateBox.style.display = "block";
+            localStorage.setItem("latestUpdate", adminUpdateText);
+        }
+
+        window.closeUpdateBox = function () {
+            updateBox.style.display = "none";
+        };
+    });
+</script>
 
 </body>
 </html>
