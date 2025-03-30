@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Details</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="app.js" defer></script>
 </head>
 <body>
     <header>
-        <h1 id="movie-title">Movie Title</h1>
+        <h1 id="movie-title">Loading...</h1>
         <nav>
             <ul>
                 <li><a href="index.html">Home</a></li>
@@ -18,8 +17,8 @@
     </header>
     
     <section id="movie-details">
-        <img id="movie-poster" src="" alt="Movie Poster">
-        <p id="movie-description">Movie description goes here...</p>
+        <img id="movie-poster" src="" alt="Movie Poster" style="display: none;">
+        <p id="movie-description">Fetching details...</p>
         <p><strong>Year:</strong> <span id="movie-year"></span></p>
         <a id="stream-link" href="#" target="_blank">Stream</a>
         <a id="download-link" href="#" target="_blank">Download</a>
@@ -28,56 +27,63 @@
     <footer>
         <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
     </footer>
+
     <script>
-document.addEventListener("DOMContentLoaded", function () {
-    function getMovieIdFromURL() {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get("id");
-    }
-
-    async function fetchMovieDetails() {
-        const movieId = getMovieIdFromURL();
-        if (!movieId) {
-            document.getElementById("movie-details").innerHTML = "<p>Movie ID not found!</p>";
-            return;
+    document.addEventListener("DOMContentLoaded", async function () {
+        function getMovieIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get("id");
         }
 
-        try {
-            const response = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv");
-            const data = await response.text();
-            const rows = data.split("\n").slice(1);
-
-            const movies = rows.map(row => {
-                const columns = row.split(",");
-                return {
-                    title: columns[0]?.trim(),
-                    year: columns[1]?.trim(),
-                    poster: columns[2]?.trim(),
-                    id: columns[3]?.trim(),
-                    stream: columns[4]?.trim(),
-                    download: columns[5]?.trim(),
-                    description: columns[6]?.trim() || "No description available."
-                };
-            });
-
-            const movie = movies.find(m => m.id === movieId);
-            if (movie) {
-                document.getElementById("movie-title").textContent = movie.title;
-                document.getElementById("movie-poster").src = movie.poster;
-                document.getElementById("movie-description").textContent = movie.description;
-                document.getElementById("movie-year").textContent = movie.year;
-                document.getElementById("stream-link").href = movie.stream;
-                document.getElementById("download-link").href = movie.download;
-            } else {
-                document.getElementById("movie-details").innerHTML = "<p>Movie not found!</p>";
+        async function fetchMovieDetails() {
+            const movieId = getMovieIdFromURL();
+            if (!movieId) {
+                document.getElementById("movie-details").innerHTML = "<p>Movie ID not found!</p>";
+                return;
             }
-        } catch (error) {
-            console.error("Error fetching movie details:", error);
-        }
-    }
 
-    fetchMovieDetails();
-});
+            try {
+                // Fetch movie data from Google Sheets (Use proxy if needed)
+                const response = await fetch("https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv");
+                const data = await response.text();
+                const rows = data.split("\n").slice(1); // Skip header
+
+                const movies = rows.map(row => {
+                    const columns = row.split(",");
+                    return {
+                        title: columns[0]?.trim(),
+                        year: columns[1]?.trim(),
+                        poster: columns[2]?.trim(),
+                        id: columns[3]?.trim(),
+                        stream: columns[4]?.trim(),
+                        download: columns[5]?.trim(),
+                        description: columns[6]?.trim() || "No description available."
+                    };
+                });
+
+                console.log("Fetched Movies:", movies); // Debugging
+                console.log("Movie ID from URL:", movieId); // Debugging
+
+                const movie = movies.find(m => m.id === movieId);
+                if (movie) {
+                    document.getElementById("movie-title").textContent = movie.title;
+                    document.getElementById("movie-poster").src = movie.poster;
+                    document.getElementById("movie-poster").style.display = "block";
+                    document.getElementById("movie-description").textContent = movie.description;
+                    document.getElementById("movie-year").textContent = movie.year;
+                    document.getElementById("stream-link").href = movie.stream;
+                    document.getElementById("download-link").href = movie.download;
+                } else {
+                    document.getElementById("movie-details").innerHTML = "<p>Movie not found!</p>";
+                }
+            } catch (error) {
+                console.error("Error fetching movie details:", error);
+                document.getElementById("movie-details").innerHTML = "<p>Error fetching movie details.</p>";
+            }
+        }
+
+        fetchMovieDetails();
+    });
     </script>
 </body>
 </html>
