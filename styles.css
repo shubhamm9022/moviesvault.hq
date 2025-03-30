@@ -34,9 +34,18 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 
 /* Footer Centering */ footer { text-align: center; background: #1c1c1c; padding: 15px; margin-top: auto; }
 
-/* Logo Styling */ .logo-container { display: flex; justify-content: center; align-items: center; padding: 20px 0; }
+/* Logo Styling */ .logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
 
-.logo { max-width: 150px; height: auto; object-fit: contain; }
+.logo {
+    max-width: 80%;  /* Adjust this if needed */
+    height: auto;
+}
+
 
 @media (max-width: 768px) { .logo { width: 100px; } .search-container input { width: 70%; } }
 
