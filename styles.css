@@ -34,7 +34,7 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 
 /* Footer Centering */ footer { text-align: center; background: #1c1c1c; padding: 15px; margin-top: auto; }
 
-/* Logo Styling */ .logo-container {
+.logo-container {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,8 +42,14 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 }
 
 .logo {
-    max-width: 80%;  /* Adjust this if needed */
+    max-width: 150px; /* Adjust this value if needed */
     height: auto;
+}
+
+@media (max-width: 600px) {
+    .logo {
+        max-width: 120px; /* Adjust for smaller screens */
+    }
 }
 
 
