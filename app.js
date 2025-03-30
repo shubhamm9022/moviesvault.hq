@@ -6,13 +6,28 @@ document.addEventListener("DOMContentLoaded", function () {
     let currentPage = 1;
     const moviesPerPage = 10;
 
-    function fetchMovies() {
-        fetch("movies.json") // Replace with Firebase fetch logic
-            .then(response => response.json())
-            .then(data => {
-                movies = data;
-                renderMovies();
-            });
+    // Replace this with your Google Sheet CSV link
+    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv";
+
+    async function fetchMovies() {
+        try {
+            const response = await fetch(sheetURL);
+            const data = await response.text();
+            parseCSV(data);
+        } catch (error) {
+            console.error("Error fetching movie data:", error);
+        }
+    }
+
+    function parseCSV(data) {
+        const rows = data.split("\n").slice(1); // Remove headers
+        movies = rows.map(row => {
+            const [title, year, poster, id] = row.split(",");
+            return { title, year, poster, id: id.trim() };
+        });
+
+        movies.reverse(); // Show latest movies first
+        renderMovies();
     }
 
     function renderMovies() {
