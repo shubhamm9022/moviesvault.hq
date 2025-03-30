@@ -21,8 +21,10 @@ function parseCSV(data) {
         return {
             title: columns[0].trim(),
             year: columns[1].trim(),
-            poster: columns[2].trim(),
-            id: columns[3].trim()
+            poster : columns[2].trim(),
+            stream: columns[3].trim(),
+            download: columns[4].trim(),
+            id: columns[5].trim()
         };
     }).filter(movie => movie); // Remove null values
 
