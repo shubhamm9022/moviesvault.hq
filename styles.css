@@ -137,10 +137,6 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
     transform: scale(1.05);
 }
 
-/* Floating animation for logo */
-.logo {
-    animation: float 3s ease-in-out infinite;
-}
 
 /* Smooth button transitions */
 button {
