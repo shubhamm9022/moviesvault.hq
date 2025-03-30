@@ -16,15 +16,15 @@ async function fetchMovies() {
 function parseCSV(data) {
     const rows = data.split("\n").slice(1); // Skip headers
     movies = rows.map(row => {
-        const columns = row.match(/(".*?"|[^",\s]+)(?=\s*,|\s*$)/g); // Properly split by commas while keeping text inside quotes
-        if (!columns || columns.length < 6) return null; // Ensure valid data
+        const columns = row.split(",");
+        if (columns.length < 4) return null; // Ensure valid data
         return {
-            title: columns[0].replace(/"/g, '').trim(),
-            year: columns[1].replace(/"/g, '').trim(),
-            poster: columns[2].replace(/"/g, '').trim(),
-            stream: columns[3].replace(/"/g, '').trim(),
-            download: columns[4].replace(/"/g, '').trim(),
-            id: columns[5].replace(/"/g, '').trim()
+            title: columns[0].trim(),
+            year: columns[1].trim(),
+            poster : columns[2].trim(),
+            stream: columns[3].trim(),
+            download: columns[4].trim(),
+            id: columns[5].trim()
         };
     }).filter(movie => movie); // Remove null values
 
@@ -32,7 +32,6 @@ function parseCSV(data) {
     filteredMovies = [...movies];
     renderMovies();
 }
-
 
 function renderMovies() {
     movieList.innerHTML = "";
@@ -79,5 +78,5 @@ searchInput.addEventListener("input", () => {
 });
 
 fetchMovies();
-});
 
+});
