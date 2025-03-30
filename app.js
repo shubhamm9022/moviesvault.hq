@@ -81,3 +81,22 @@ fetchMovies();
 
 });
 
+document.addEventListener("DOMContentLoaded", function () {
+    // Load update message from storage
+    const updateBox = document.getElementById("update-box");
+    const updateMessage = document.getElementById("update-message");
+
+    // Simulating admin input for new updates
+    const adminUpdateText = "🔥 New movies added today! Check them out now."; // Change this when you add updates
+
+    if (localStorage.getItem("latestUpdate") !== adminUpdateText) {
+        updateMessage.textContent = adminUpdateText;
+        updateBox.style.display = "block";
+        localStorage.setItem("latestUpdate", adminUpdateText); // Save latest update
+    }
+
+    // Close update box
+    window.closeUpdateBox = function () {
+        updateBox.style.display = "none";
+    };
+});
