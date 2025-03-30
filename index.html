@@ -20,9 +20,10 @@
     <button onclick="closeUpdateBox()">Close</button>
 </div>
 
-<section id="movie-list">
-    <!-- Movies will be loaded here dynamically -->
+<section id="movie-list" class="grid-container">
+    <!-- Movies will be loaded here dynamically in a 2x2 grid layout -->
 </section>
+
 <div class="pagination">
     <button id="prevPage">Previous</button>
     <button id="nextPage">Next</button>
@@ -38,24 +39,6 @@
 </footer>
 
 <script type="module" src="app.js"></script>
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const updateBox = document.getElementById("update-box");
-        const updateMessage = document.getElementById("update-message");
-        
-        const adminUpdateText = "🔥 New movies added today! Check them out now."; // Change this when you add updates
-
-        if (localStorage.getItem("latestUpdate") !== adminUpdateText) {
-            updateMessage.textContent = adminUpdateText;
-            updateBox.style.display = "block";
-            localStorage.setItem("latestUpdate", adminUpdateText);
-        }
-
-        window.closeUpdateBox = function () {
-            updateBox.style.display = "none";
-        };
-    });
-</script>
 
 </body>
 </html>
