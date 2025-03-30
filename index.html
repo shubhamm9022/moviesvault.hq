@@ -3,24 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Vault</title>
-    <link rel="stylesheet" href="styles.css">
+    <div class="logo-container">
+    <img src="logo.png" alt="MoviesVault.HQ Logo" class="logo">
+</div>
+   <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <h1>Movie Vault</h1>
         <nav>
             <ul>
-                <li><a href="#home">Home</a></li>
+                <li><a href="index.html">Home</a></li>
                 <li><a href="#categories">Categories</a></li>
                 <li><a href="#latest">Latest</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="admin.html">Admin</a></li>
+                <li><a href="contact.html">Contact</a></li>
             </ul>
         </nav>
     </header>
     
-    <section id="movie-list"></section>
+    <section id="movie-list">
+        <!-- Movies will be loaded here dynamically -->
+    </section>
     
     <div class="pagination">
         <button id="prevPage" disabled>Previous</button>
@@ -29,8 +33,17 @@
     
     <footer>
         <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
+        <nav>
+            <ul>
+                <li><a href="dmca.html">DMCA</a></li>
+                <li><a href="request.html">Request</a></li>
+                <li><a href="contact.html">Contact</a></li>
+                <li><a href="how-to-download.html">How to DL</a></li>
+            </ul>
+        </nav>
     </footer>
 
-    <script src="app.js"></script>
+    <!-- Load JavaScript as a Module -->
+    <script type="module" src="app.js"></script>
 </body>
 </html>
