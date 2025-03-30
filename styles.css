@@ -48,10 +48,10 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 
 @media (max-width: 600px) {
     .logo {
-        max-width: 120px; /* Adjust for smaller screens */
+        max-width: 350px; /* Adjust for smaller screens */
     }
 }
 
 
-@media (max-width: 768px) { .logo { width: 100px; } .search-container input { width: 70%; } }
+@media (max-width: 768px) { .logo { width: 350px; } .search-container input { width: 70%; } }
 
