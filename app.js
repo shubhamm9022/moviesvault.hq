@@ -69,3 +69,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchMovies();
 });
+function searchMovies() {
+    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+    const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(searchQuery));
+    renderMovies(filteredMovies);
+}
