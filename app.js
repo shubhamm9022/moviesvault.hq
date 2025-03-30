@@ -79,6 +79,5 @@ searchInput.addEventListener("input", () => {
 });
 
 fetchMovies();
-console.log("Fetched movies:", movies);
 });
 
