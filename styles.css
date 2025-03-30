@@ -114,3 +114,57 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
     transform: scale(1.05);
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
 }
+/* Smooth fade-in effect for the homepage */
+body {
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animate movie items */
+#movie-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInMovies 0.8s ease-in-out forwards 0.5s;
+}
+
+@keyframes fadeInMovies {
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animated buttons */
+button, .stream-btn, .download-btn {
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+button:hover, .stream-btn:hover, .download-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+/* Hidden update box */
+#update-box {
+    display: none;
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #333;
+    color: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.5s ease-in-out;
+}
+
+@keyframes slideUp {
+    from { transform: translateX(-50%) translateY(20px); opacity: 0; }
+    to { transform: translateX(-50%) translateY(0); opacity: 1; }
+}
