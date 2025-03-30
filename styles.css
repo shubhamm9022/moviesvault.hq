@@ -105,7 +105,7 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 
 /* Stream Button */
 #stream-link {
-    background: linear-gradient(135deg, #ff7b00, #ff3c00);
+    background: linear-gradient(135deg, #ff7b00, #32CD32);
     color: white;
     box-shadow: 0px 4px 10px rgba(255, 60, 0, 0.4);
 }
