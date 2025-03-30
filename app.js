@@ -1,5 +1,6 @@
-document.addEventListener("DOMContentLoaded", function () { const movieList = document.getElementById("movie-list"); const prevPageBtn = document.getElementById("prevPage"); const nextPageBtn = document.getElementById("nextPage"); let movies = []; let currentPage = 1; const moviesPerPage = 10;
+document.addEventListener("DOMContentLoaded", function () { const movieList = document.getElementById("movie-list"); const prevPageBtn = document.getElementById("prevPage"); const nextPageBtn = document.getElementById("nextPage"); const searchInput = document.getElementById("searchInput"); let movies = []; let filteredMovies = []; let currentPage = 1; const moviesPerPage = 10;
 
+// Google Sheet CSV link
 const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv";
 
 async function fetchMovies() {
@@ -13,29 +14,28 @@ async function fetchMovies() {
 }
 
 function parseCSV(data) {
-    const rows = data.split("\n").slice(1); // Remove headers
+    const rows = data.split("\n").slice(1); // Skip headers
     movies = rows.map(row => {
         const columns = row.split(",");
-        if (columns.length >= 4) {
-            return {
-                title: columns[0],
-                year: columns[1],
-                poster: columns[2],
-                id: columns[3].trim()
-            };
-        }
-    }).filter(movie => movie !== undefined);
+        if (columns.length < 4) return null; // Ensure valid data
+        return {
+            title: columns[0].trim(),
+            year: columns[1].trim(),
+            poster: columns[2].trim(),
+            id: columns[3].trim()
+        };
+    }).filter(movie => movie); // Remove null values
 
     movies.reverse(); // Show latest movies first
+    filteredMovies = [...movies];
     renderMovies();
 }
 
-function renderMovies(filteredMovies = null) {
+function renderMovies() {
     movieList.innerHTML = "";
-    const displayMovies = filteredMovies || movies;
     const start = (currentPage - 1) * moviesPerPage;
     const end = start + moviesPerPage;
-    const paginatedMovies = displayMovies.slice(start, end);
+    const paginatedMovies = filteredMovies.slice(start, end);
 
     paginatedMovies.forEach(movie => {
         const movieContainer = document.createElement("div");
@@ -51,7 +51,7 @@ function renderMovies(filteredMovies = null) {
     });
 
     prevPageBtn.disabled = currentPage === 1;
-    nextPageBtn.disabled = end >= displayMovies.length;
+    nextPageBtn.disabled = end >= filteredMovies.length;
 }
 
 prevPageBtn.addEventListener("click", () => {
@@ -62,20 +62,18 @@ prevPageBtn.addEventListener("click", () => {
 });
 
 nextPageBtn.addEventListener("click", () => {
-    if (currentPage * moviesPerPage < movies.length) {
+    if (currentPage * moviesPerPage < filteredMovies.length) {
         currentPage++;
         renderMovies();
     }
 });
 
-function searchMovies() {
-    const searchQuery = document.getElementById("searchInput").value.toLowerCase();
-    const filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(searchQuery));
-    currentPage = 1; // Reset to first page
-    renderMovies(filteredMovies);
-}
-
-document.getElementById("searchInput").addEventListener("input", searchMovies);
+searchInput.addEventListener("input", () => {
+    const searchQuery = searchInput.value.toLowerCase();
+    filteredMovies = movies.filter(movie => movie.title.toLowerCase().includes(searchQuery));
+    currentPage = 1;
+    renderMovies();
+});
 
 fetchMovies();
 
