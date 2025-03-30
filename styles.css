@@ -55,3 +55,19 @@ nav ul li a { color: #fff; text-decoration: none; font-weight: 600; }
 
 @media (max-width: 768px) { .logo { width: 350px; } .search-container input { width: 70%; } }
 
+#movie-poster {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    border-radius: 10px;
+    width: 80%; /* Good fit for mobile */
+    max-height: 450px; /* Limits height */
+    object-fit: cover; /* Ensures a clean, cropped look */
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease-in-out;
+}
+
+#movie-poster:hover {
+    transform: scale(1.05);
+}
