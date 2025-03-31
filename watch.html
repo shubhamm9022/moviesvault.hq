@@ -105,7 +105,7 @@ footer {
     const movieId = urlParams.get('id');    if (!movieId) {        
     document.body.innerHTML = "<h2>Invalid Movie ID</h2>";        
     return;        
-}      fetch(https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey})  
+}      fetch('https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}')  
 .then(response => response.json())  
 .then(data => {  
 const rows = data.values;  
