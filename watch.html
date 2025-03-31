@@ -1,156 +1,140 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Page</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
+    <title>Watch Movie</title>
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #121212;
-            color: #fff;
+            background-color: black;
+            color: white;
             text-align: center;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            animation: fadeIn 1s ease-in-out;
         }
-        header {
-            background: #1f1f1f;
+        .container {
+            max-width: 800px;
+            margin: auto;
             padding: 20px;
         }
         .logo {
-            max-width: 150px;
+            width: 150px;
+            margin: 20px auto;
         }
-        main {
-            padding: 20px;
-        }
-        .video-container {
-            margin-top: 20px;
-            animation: fadeInUp 1s ease-in-out;
-        }
-        video {
+        iframe {
             width: 100%;
-            max-width: 800px;
+            height: 450px;
+            border: none;
             border-radius: 10px;
+            transition: transform 0.3s;
+        }
+        .buttons {
+            margin: 20px 0;
         }
         .btn {
-            display: inline-block;
-            padding: 12px 18px;
+            padding: 12px 24px;
+            border: none;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
             border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+        .server-btn {
+            background-color: #28a745;
+            color: white;
+        }
+        .server-btn:hover {
+            background-color: #218838;
+        }
+        .download-btn {
+            background-color: #007bff;
+            color: white;
+        }
+        .download-btn:hover {
+            background-color: #0056b3;
+        }
+        .request-removal {
+            color: white;
             text-decoration: none;
             font-weight: bold;
-            transition: 0.3s;
         }
-        .btn:hover {
-            transform: scale(1.05);
-            box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2);
-        }
-        .server-buttons .btn { background: #28a745; color: white; }
-        .download-links .btn { background: #007bff; color: white; }
-        .request-removal {
-            margin-top: 20px;
-            font-size: 14px;
-            color: #ccc;
+        .request-removal:hover {
+            text-decoration: underline;
         }
         footer {
-            background: #1f1f1f;
-            padding: 15px;
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            margin-top: 20px;
+            color: gray;
+            padding: 10px 0;
         }
     </style>
 </head>
 <body>
-    <header>
-        <img src="logo.png" alt="Site Logo" class="logo">
-    </header>
-    <main>
-        <h2 id="movie-title">Loading...</h2>
-        <div class="video-container">
-            <video id="player" controls>
-                <source id="video-source" src="" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
+    <div class="container">
+        <img src="logo.png" alt="Logo" class="logo">
+        <h1 id="movie-title">Loading...</h1>
+        <div>
+            <iframe id="video-player" src="" allowfullscreen></iframe>
         </div>
-        <div class="server-buttons">
-            <h3>Choose Streaming Server</h3>
-            <a href="#" id="server1" class="btn">Server 1</a>
-            <a href="#" id="server2" class="btn">Server 2</a>
+        <h2>Choose Server</h2>
+        <div class="buttons">
+            <button class="btn server-btn" onclick="changeServer('streamtape')">Server 1</button>
+            <button class="btn server-btn" onclick="changeServer('earnvids')">Server 2</button>
         </div>
-        <div class="download-links">
-            <h3>Download Options</h3>
-            <a href="#" id="download1" class="btn">Download from StreamTape</a>
-            <a href="#" id="download2" class="btn">Download from PixelDrain</a>
+        <h2>Choose Downloading Option</h2>
+        <div class="buttons">
+            <a id="pixeldrain-link" href="#" class="btn download-btn" target="_blank">Download from PixelDrain</a>
+            <a id="mixdrop-link" href="#" class="btn download-btn" target="_blank">Download from MixDrop</a>
         </div>
-        <div class="request-removal">
-            <p>If you are the content owner and wish to request removal, <a href="request-removal.html">click here</a>.</p>
-        </div>
-    </main>
-    <footer>
-        <p>&copy; 2025 MovieVault. All rights reserved.</p>
-    </footer>
+        <footer>
+            <p>&copy; 2025 All Rights Reserved</p>
+            <a href="/removal" class="request-removal">Request Removal</a>
+        </footer>
+    </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieId = urlParams.get('id');
-            if (!movieId) {
-                document.body.innerHTML = "<h2>Invalid Movie Request</h2>";
-                return;
-            }
-
-            // Check if the 8-hour session has expired
-            const lastAccessTime = localStorage.getItem('lastAccessTime');
-            const currentTime = Date.now();
+        async function fetchMovieData(movieId) {
+            const sheetId = '1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs';
+            const apiKey = 'AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA';
+            const sheetName = 'Sheet 2';
+            const range = `${sheetName}!A:E`;
+            const url = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${range}?key=${apiKey}`;try {
+            let response = await fetch(url);
+            let data = await response.json();
+            let rows = data.values;
             
-            if (lastAccessTime && currentTime - lastAccessTime > 8 * 60 * 60 * 1000) {
-                // More than 8 hours have passed, so prompt for reload
-                alert("Your session has expired. Please reload the page.");
-                localStorage.removeItem('lastAccessTime');
-                return;
-            }
+            if (!rows) throw new Error('No data found');
             
-            // Update session access time
-            localStorage.setItem('lastAccessTime', currentTime);
+            let headers = rows[0];
+            let movieIndex = headers.indexOf("ID");
+            let nameIndex = headers.indexOf("Name");
+            let streamtapeIndex = headers.indexOf("StreamTape");
+            let earnvidsIndex = headers.indexOf("EarnVids");
+            let pixeldrainIndex = headers.indexOf("PixelDrain");
+            let mixdropIndex = headers.indexOf("MixDrop");
+            
+            let movie = rows.find(row => row[movieIndex] === movieId);
+            if (!movie) throw new Error('Movie not found');
+            
+            document.getElementById("movie-title").innerText = movie[nameIndex];
+            document.getElementById("video-player").src = movie[streamtapeIndex];
+            document.getElementById("pixeldrain-link").href = movie[pixeldrainIndex];
+            document.getElementById("mixdrop-link").href = movie[mixdropIndex];
+            window.streamtape = movie[streamtapeIndex];
+            window.earnvids = movie[earnvidsIndex];
+        } catch (error) {
+            console.error('Error fetching movie data:', error);
+            document.getElementById("movie-title").innerText = "Movie Not Found";
+        }
+    }
+    
+    function changeServer(server) {
+        document.getElementById("video-player").src = (server === 'streamtape') ? window.streamtape : window.earnvids;
+    }
+    
+    let params = new URLSearchParams(window.location.search);
+    let movieId = params.get('id');
+    if (movieId) fetchMovieData(movieId);
+</script>
 
-            const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs";
-            const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";
-            const sheetName = "Sheet 2";  // Updated sheet name
-
-            const sheetUrl = `https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`;
-
-            fetch(sheetUrl)
-                .then(response => response.json())
-                .then(data => {
-                    const rows = data.values;
-                    const movieData = rows.find(row => row[0] === movieId);
-
-                    if (!movieData) {
-                        document.body.innerHTML = "<h2>Movie Not Found</h2>";
-                        return;
-                    }
-
-                    document.getElementById("movie-title").innerText = movieData[1];
-                    document.getElementById("video-source").src = movieData[2];
-                    document.getElementById("server1").href = movieData[3];
-                    document.getElementById("server2").href = movieData[4];
-                    document.getElementById("download1").href = movieData[5];
-                    document.getElementById("download2").href = movieData[6];
-
-                    const player = new Plyr('#player', {
-                        controls: ['play', 'progress', 'current-time', 'mute', 'volume', 'settings', 'fullscreen', 'speed'],
-                        settings: ['quality', 'speed'],
-                        autoplay: false,
-                    });
-                })
-                .catch(error => {
-                    document.body.innerHTML = "<h2>Failed to Load Movie Data</h2>";
-                    console.error(error);
-                });
-        });
-    </script>
 </body>
 </html>
