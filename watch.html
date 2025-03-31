@@ -3,8 +3,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Watch & Download Movie</title>
-    <link rel="stylesheet" href="https://cdn.plyr.io/3.7.8/plyr.css">
-    <script src="https://cdn.plyr.io/3.7.8/plyr.js"></script>
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -17,7 +15,6 @@
         header {
             background: #1f1f1f;
             padding: 20px;
-            animation: fadeIn 1s ease-in-out;
         }
         .logo {
             max-width: 150px;
@@ -26,110 +23,100 @@
         }
         main {
             padding: 20px;
-            animation: fadeInUp 1s ease-in-out;
         }
         .video-container {
-            margin-top: 20px;
-            animation: fadeInUp 1s ease-in-out;
+            position: relative;
+            width: 100%;
+            max-width: 800px;
+            aspect-ratio: 16 / 9;
+            margin: auto;
         }
         iframe {
+            position: absolute;
             width: 100%;
-            height: 400px;
-            max-width: 800px;
+            height: 100%;
             border-radius: 10px;
             display: none;
+            border: none;
         }
-        .server-buttons, .download-links {
+        .server-buttons, .download-buttons {
             margin-top: 20px;
         }
         .btn {
             display: inline-block;
+            background: #28a745;
             color: white;
             padding: 10px 15px;
             text-decoration: none;
             border-radius: 5px;
             margin: 10px;
+            cursor: pointer;
             transition: 0.3s;
-            animation: fadeInUp 1s ease-in-out;
         }
-        .server-buttons .btn {
-            background: #28a745;
-        }
-        .server-buttons .btn:hover {
+        .btn:hover {
             background: #218838;
         }
-        .download-links .btn {
-            background: #007bff;
-        }
-        .download-links .btn:hover {
-            background: #0056b3;
-        }
         footer {
+            margin-top: 40px;
+            padding: 20px;
             background: #1f1f1f;
-            padding: 10px;
-            margin-top: 20px;
-            animation: fadeIn 1s ease-in-out;
         }
-        footer a {
-            color: #ff9800;
+        .removal-link {
+            color: #f00;
             text-decoration: none;
-        }
-        footer a:hover {
-            text-decoration: underline;
         }
     </style>
 </head>
 <body>
 <header>
     <img src="logo.png" alt="Site Logo" class="logo">
-</header>
-<main>
+</header><main>
     <h2 id="movie-title">Loading...</h2>
     <div class="video-container">
-        <iframe id="streamtape-player" frameborder="0" allowfullscreen></iframe>
-        <iframe id="earnvids-player" frameborder="0" allowfullscreen></iframe>
-    </div>
-    <div class="server-buttons">
-        <h3>Choose Streaming Server</h3>
-        <a href="#" id="server1" class="btn">Server 1</a>
-        <a href="#" id="server2" class="btn">Server 2</a>
-    </div>
-    <div class="download-links">
-        <h3>Download Options</h3>
-        <a href="#" id="download1" class="btn">Download from StreamTape</a>
-        <a href="#" id="download2" class="btn">Download from PixelDrain</a>
-    </div>
-</main>
-<footer>
-    <p>&copy; 2025 MovieVault. All rights reserved.</p>
-    <p><a href="contact.html">Contact for Removal</a></p>
-</footer>
-<script>
+        <iframe id="player-earnvids" allowfullscreen></iframe>
+        <iframe id="player-streamtape" allowfullscreen></iframe>
+    </div><div class="server-buttons">
+    <h3>Choose Streaming Server</h3>
+    <button class="btn" onclick="switchServer('earnvids')">EarnVids</button>
+    <button class="btn" onclick="switchServer('streamtape')">StreamTape</button>
+</div>
+
+<div class="download-buttons">
+    <h3>Download Links</h3>
+    <a id="download-pixeldrain" class="btn" target="_blank">Download from PixelDrain</a>
+    <a id="download-mixdrop" class="btn" target="_blank">Download from MixDrop</a>
+</div>
+
+</main><footer>
+    <p>&copy; 2025 MoviesVault HQ. All Rights Reserved.</p>
+    <a href="request-removal.html" class="removal-link">Request Content Removal</a>
+</footer><script>
+    const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs";
+    const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";
+    const sheetName = "Sheet 2";
+
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
         const movieId = urlParams.get('id');
-        const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs";  // Your Google Sheet ID
-        const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";    // Your Google API Key
-        const sheetName = "Sheet 2";       // Your Google Sheet Name
+
+        if (!movieId) {
+            document.body.innerHTML = "<h2>Invalid Movie ID</h2>";
+            return;
+        }
+
         fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`)
             .then(response => response.json())
             .then(data => {
                 const rows = data.values;
                 const movie = rows.find(row => row[0] === movieId.toString());
+
                 if (movie) {
                     document.getElementById("movie-title").innerText = movie[1];
-                    document.getElementById("server1").addEventListener("click", function() {
-                        document.getElementById("streamtape-player").src = movie[2];
-                        document.getElementById("streamtape-player").style.display = "block";
-                        document.getElementById("earnvids-player").style.display = "none";
-                    });
-                    document.getElementById("server2").addEventListener("click", function() {
-                        document.getElementById("earnvids-player").src = movie[3];
-                        document.getElementById("earnvids-player").style.display = "block";
-                        document.getElementById("streamtape-player").style.display = "none";
-                    });
-                    document.getElementById("download1").href = movie[4];
-                    document.getElementById("download2").href = movie[5];
+                    document.getElementById("player-earnvids").src = movie[2];
+                    document.getElementById("player-streamtape").src = movie[3];
+                    document.getElementById("download-pixeldrain").href = movie[4];
+                    document.getElementById("download-mixdrop").href = movie[5];
+                    switchServer('earnvids');
                 } else {
                     document.body.innerHTML = "<h2>Movie Not Found</h2>";
                 }
@@ -139,6 +126,16 @@
                 console.error(error);
             });
     });
-</script>
-</body>
+
+    function switchServer(server) {
+        document.getElementById('player-earnvids').style.display = 'none';
+        document.getElementById('player-streamtape').style.display = 'none';
+
+        if (server === 'earnvids') {
+            document.getElementById('player-earnvids').style.display = 'block';
+        } else {
+            document.getElementById('player-streamtape').style.display = 'block';
+        }
+    }
+</script></body>
 </html>
