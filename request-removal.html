@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Removal</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #121212;
+            color: #fff;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        header {
+            background: #1f1f1f;
+            padding: 20px;
+        }
+        .logo {
+            max-width: 150px;
+        }
+        main {
+            padding: 20px;
+        }
+        .form-container {
+            background-color: #333;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            width: 60%;
+            margin: 0 auto;
+        }
+        .form-container input,
+        .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: none;
+            background-color: #444;
+            color: #fff;
+        }
+        .btn {
+            background-color: #28a745;
+            color: white;
+            padding: 12px 18px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        footer {
+            background: #1f1f1f;
+            padding: 15px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <img src="logo.png" alt="Site Logo" class="logo">
+    </header>
+    <main>
+        <h2>Request Content Removal</h2>
+        <div class="form-container">
+            <h3>If you are the owner of this content and wish to request removal, please fill out the form below:</h3>
+            <form action="mailto:removal-request@movievault.com" method="post" enctype="text/plain">
+                <label for="movie-title">Movie Title</label>
+                <input type="text" id="movie-title" name="movie-title" required>
+
+                <label for="movie-id">Movie ID</label>
+                <input type="text" id="movie-id" name="movie-id" required>
+
+                <label for="reason">Reason for Removal Request</label>
+                <textarea id="reason" name="reason" rows="4" required></textarea>
+
+                <button type="submit" class="btn">Submit Removal Request</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>&copy; 2025 MovieVault. All rights reserved.</p>
+    </footer>
+</body>
+</html>
