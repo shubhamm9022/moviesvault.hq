@@ -27,15 +27,15 @@
         }
         .video-container {
             width: 100%;
-            max-width: 800px;
+            max-width: 720px;
             margin: auto;
             position: relative;
         }
         iframe {
             width: 100%;
-            height: 400px;
+            height: 405px; /* Same as Plyr.js aspect ratio */
             border-radius: 10px;
-            display: none; /* Hide both iframes initially */
+            display: none;
         }
         .server-buttons {
             margin-top: 20px;
@@ -53,6 +53,24 @@
         }
         .btn:hover {
             background: #218838;
+        }
+        footer {
+            margin-top: 40px;
+            padding: 20px;
+            background: #1f1f1f;
+        }
+        .footer-links a {
+            color: #28a745;
+            text-decoration: none;
+            margin: 0 10px;
+        }
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+        .footer-text {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #bbb;
         }
     </style>
 </head>
@@ -76,10 +94,21 @@
     </div>
 </main>
 
+<footer>
+    <div class="footer-links">
+        <a href="#" id="pixeldrain-link">Download from PixelDrain</a>
+        <a href="#" id="mixdrop-link">Download from MixDrop</a>
+        <a href="removal.html">Request Removal</a>
+    </div>
+    <div class="footer-text">
+        &copy; 2025 MovieVault. All Rights Reserved.
+    </div>
+</footer>
+
 <script>
-    const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs";  // Replace with your Google Sheet ID
-    const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";    // Replace with your Google API Key
-    const sheetName = "Sheet 2";       // Replace with the correct sheet name
+    const sheetId = "1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs";  
+    const apiKey = "AIzaSyC7XmH1cTNmSwsIanm37X7o15eNfG39eEA";    
+    const sheetName = "Sheet 2";       
 
     document.addEventListener("DOMContentLoaded", function() {
         const urlParams = new URLSearchParams(window.location.search);
@@ -97,11 +126,13 @@
                 const movie = rows.find(row => row[0] === movieId.toString());
 
                 if (movie) {
-                    document.getElementById("movie-title").innerText = movie[1];  // Movie Title
-                    document.getElementById("player-earnvids").src = movie[2];   // EarnVids Link
-                    document.getElementById("player-streamtape").src = movie[3]; // StreamTape Link
+                    document.getElementById("movie-title").innerText = movie[1];  
+                    document.getElementById("player-earnvids").src = movie[2];  
+                    document.getElementById("player-streamtape").src = movie[3]; 
+                    document.getElementById("pixeldrain-link").href = movie[4];  
+                    document.getElementById("mixdrop-link").href = movie[5];    
 
-                    switchServer('earnvids'); // Load default player
+                    switchServer('earnvids'); 
                 } else {
                     document.body.innerHTML = "<h2>Movie Not Found</h2>";
                 }
