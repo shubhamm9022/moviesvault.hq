@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">  <head>    <meta charset="UTF-8">      <meta name="viewport" content="width=device-width, initial-scale=1.0">        <title>Watch & Download Movie</title>        <style>        
+<!DOCTYPE html><html lang="en">  <head>    <meta charset="UTF-8">      <meta name="viewport" content="width=device-width, initial-scale=1.0">        <title>Watch & Download Movie</title>        
+<style>        
     @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');body {        
     font-family: 'Poppins', sans-serif;        
     background-color: #121212;        
@@ -54,11 +55,11 @@ iframe {
 .btn:hover {        
     background: #218838;        
 }        
-.download-buttons .btn, .server-buttons .btn {        
+.download-buttons .btn {        
     background: #007bff;        
     border-radius: 8px;        
 }        
-.download-buttons .btn:hover, .server-buttons .btn:hover {        
+.download-buttons .btn:hover {        
     background: #0056b3;        
 }        
 h2 {        
@@ -77,7 +78,8 @@ footer {
 .removal-link {        
     color: #f00;        
     text-decoration: none;        
-}  </style>  </head>  <body>        <header>        
+}  </style>  </head>  <body>        
+<header>        
     <img src="logo.png" alt="Site Logo" class="logo">        
 </header><main>        
     <h2 id="movie-title">Loading...</h2>        
@@ -86,8 +88,8 @@ footer {
         <iframe id="player-streamtape" allowfullscreen></iframe>        
     </div><div class="server-buttons">        
     <h3>Choose Streaming Server</h3>        
-    <button class="btn" onclick="switchServer('earnvids')">Server 1</button>        
-    <button class="btn" onclick="switchServer('streamtape')">Server 2</button>        
+    <button class="btn" onclick="switchServer('earnvids')">EarnVids</button>        
+    <button class="btn" onclick="switchServer('streamtape')">StreamTape</button>        
 </div>  <div class="download-buttons">        
     <h3>Download Links</h3>        
     <a id="download-pixeldrain" class="btn" target="_blank">Download from PixelDrain</a>        
@@ -121,14 +123,22 @@ document.body.innerHTML = "<h2>Movie Not Found</h2>";
 .catch(error => {
 document.body.innerHTML = "<h2>Failed to load movie data</h2>";
 console.error(error);
-});});
+});
 
-function switchServer(server) { document.getElementById('player-earnvids').style.display = 'none'; document.getElementById('player-streamtape').style.display = 'none';
+});
 
-if (server === 'earnvids') { document.getElementById('player-earnvids').style.display = 'block'; } else { document.getElementById('player-streamtape').style.display = 'block'; }
+function switchServer(server) {
+document.getElementById('player-earnvids').style.display = 'none';
+document.getElementById('player-streamtape').style.display = 'none';
+
+if (server === 'earnvids') {
+document.getElementById('player-earnvids').style.display = 'block';
+} else {
+document.getElementById('player-streamtape').style.display = 'block';
+}
 
 }
 
 </script></body>
 
-</html>
+</html>      
