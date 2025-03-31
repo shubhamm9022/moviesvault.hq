@@ -105,25 +105,34 @@ footer {
     const movieId = urlParams.get('id');    if (!movieId) {        
     document.body.innerHTML = "<h2>Invalid Movie ID</h2>";        
     return;        
-}      fetch('https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}')  
-.then(response => response.json())  
-.then(data => {  
-const rows = data.values;  
-const movie = rows.find(row => row[0] === movieId.toString());  if (movie) {
-document.getElementById("movie-title").innerText = movie[1];
-document.getElementById("player-earnvids").src = movie[2];
-document.getElementById("player-streamtape").src = movie[3];
-document.getElementById("download-pixeldrain").href = movie[4];
-document.getElementById("download-mixdrop").href = movie[5];
-switchServer('earnvids');
-} else {
-document.body.innerHTML = "<h2>Movie Not Found</h2>";
-}
-})
-.catch(error => {
-document.body.innerHTML = "<h2>Failed to load movie data</h2>";
-console.error(error);
-});
+}     fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheetId}/values/${sheetName}?key=${apiKey}`)
+    .then(response => response.json())
+    .then(data => {
+        console.log("API Response:", data); // ✅ Debugging log
+
+        if (!data.values) {
+            document.body.innerHTML = "<h2>No data found</h2>";
+            return;
+        }
+
+        const rows = data.values;
+        const movie = rows.find(row => row[0] === movieId.toString());
+
+        if (movie) {
+            document.getElementById("movie-title").innerText = movie[1];
+            document.getElementById("player-earnvids").src = movie[2];
+            document.getElementById("player-streamtape").src = movie[3];
+            document.getElementById("download-pixeldrain").href = movie[4];
+            document.getElementById("download-mixdrop").href = movie[5];
+            switchServer('earnvids');
+        } else {
+            document.body.innerHTML = "<h2>Movie Not Found</h2>";
+        }
+    })
+    .catch(error => {
+        console.error("Fetch error:", error);
+        document.body.innerHTML = "<h2>Failed to load movie data</h2>";
+    });
 
 });
 
