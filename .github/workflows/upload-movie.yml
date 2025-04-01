@@ -1,0 +1,33 @@
+name: Upload Movie to Multiple Platforms
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'upload.js'
+      - 'upload-movie.yml'
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Upload movie
+        run: node upload.js
+        env:
+          PIXELDRAIN_API: ${{ secrets.PIXELDRAIN_API }}
+          MIXDROP_API: ${{ secrets.MIXDROP_API }}
+          STREAMTAPE_API: ${{ secrets.STREAMTAPE_API }}
+          EARNVIDS_API: ${{ secrets.EARNVIDS_API }}
