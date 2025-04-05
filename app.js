@@ -1,3 +1,4 @@
+
 document.addEventListener("DOMContentLoaded", function () {
     // Initialize Supabase
     const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
@@ -96,7 +97,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p class="movie-title">${movie.title} (${movie.year})</p>
             `;
             movieContainer.addEventListener("click", () => {
-               window.location.href = `movie.html?slug=${movie.slug}`;
+                window.location.href = `movie.html?slug=${movie.slug}`;
             });
             movieList.appendChild(movieContainer);
         });
@@ -146,4 +147,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchMovies();
 });
+
 
