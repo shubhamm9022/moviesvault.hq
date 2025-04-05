@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
     const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o'; 
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o'; // Replace with your actual anon/public key
+    const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
 
     const movieList = document.getElementById("movie-list");
     const prevPageBtn = document.getElementById("prevPage");
@@ -15,97 +15,79 @@ document.addEventListener("DOMContentLoaded", async function () {
     let currentPage = 1;
     const moviesPerPage = 12;
     let currentCategory = "all";
+    let currentSearch = "";
 
     function isValidUrl(str) {
         try {
             new URL(str);
             return true;
-        } catch {
+        } catch (_) {
             return false;
         }
     }
 
     async function fetchMovies() {
-        movieList.innerHTML = `<div class="skeleton-container">${Array(moviesPerPage).fill().map(() => `
-            <div class="movie-container">
-                <div class="skeleton skeleton-poster"></div>
-                <div class="skeleton skeleton-text" style="width:80%"></div>
-                <div class="skeleton skeleton-text" style="width:60%"></div>
-            </div>
-        `).join('')}</div>`;
+        const { data, error } = await supabaseClient
+            .from("movies")
+            .select("*");
 
-        try {
-            const { data, error } = await supabase.from('movies').select('*').order('created_at', { ascending: false });
-            if (error) throw error;
-
-            movies = data.map(movie => ({
-                id: movie.id,
-                title: movie.title || "Untitled Movie",
-                year: movie.year || "N/A",
-                genre: (movie.genre || "uncategorized").toLowerCase().replace(/\s+/g, "-"),
-                poster: movie.poster || 'https://via.placeholder.com/200x300?text=No+Poster',
-                streamlink: isValidUrl(movie.streamlink) ? movie.streamlink : null,
-                downloadlink: isValidUrl(movie.downloadlink) ? movie.downloadlink : null,
-                slug: (movie.slug || "").trim(),
-                description: movie.description || "No description available"
-            }));
-
-            filteredMovies = movies.filter(m => m.poster);
-            renderMovies();
-        } catch (err) {
-            console.error("Error loading movies:", err);
-            movieList.innerHTML = `<div class="error"><p>Failed to load movies. Try refreshing.</p><button onclick="window.location.reload()">Retry</button></div>`;
+        if (error) {
+            console.error("Error fetching movies:", error.message);
+            return;
         }
+
+        movies = data;
+        filterAndRenderMovies();
+    }
+
+    function filterAndRenderMovies() {
+        filteredMovies = movies.filter(movie => {
+            const matchesCategory = currentCategory === "all" || movie.category.toLowerCase() === currentCategory.toLowerCase();
+            const matchesSearch = movie.title.toLowerCase().includes(currentSearch.toLowerCase());
+            return matchesCategory && matchesSearch;
+        });
+
+        renderMovies();
     }
 
     function renderMovies() {
         movieList.innerHTML = "";
+
         const start = (currentPage - 1) * moviesPerPage;
         const end = start + moviesPerPage;
         const pageMovies = filteredMovies.slice(start, end);
 
         if (pageMovies.length === 0) {
-            movieList.innerHTML = `<p class="no-results">No movies found.</p>`;
+            movieList.innerHTML = "<p style='text-align:center; color:white;'>No movies found.</p>";
             return;
         }
 
         pageMovies.forEach(movie => {
-            const div = document.createElement("div");
-            div.classList.add("movie-container");
-            div.innerHTML = `
-                <img loading="lazy" src="${movie.poster}" class="movie-poster" alt="${movie.title}" 
-                    onerror="this.src='https://via.placeholder.com/200x300?text=No+Poster';">
-                <p class="movie-title">${movie.title} (${movie.year})</p>
+            const movieCard = document.createElement("div");
+            movieCard.className = "movie-card";
+            movieCard.innerHTML = `
+                <img src="${isValidUrl(movie.image_url) ? movie.image_url : 'default.jpg'}" alt="${movie.title}">
+                <h3>${movie.title}</h3>
+                <p>${movie.category}</p>
+                <a href="${movie.download_link}" target="_blank">Download</a>
             `;
-            div.addEventListener("click", () => {
-                window.location.href = `movie.html?slug=${movie.slug}`;
-            });
-            movieList.appendChild(div);
+            movieList.appendChild(movieCard);
         });
-
-        prevPageBtn.disabled = currentPage === 1;
-        nextPageBtn.disabled = end >= filteredMovies.length;
     }
 
-    function handleSearch() {
-        const query = searchInput.value.toLowerCase();
-        filteredMovies = movies.filter(movie =>
-            movie.title.toLowerCase().includes(query) &&
-            (currentCategory === "all" || movie.genre === currentCategory)
-        );
+    searchBtn.addEventListener("click", () => {
+        currentSearch = searchInput.value.trim();
         currentPage = 1;
-        renderMovies();
-    }
-
-    searchInput.addEventListener("input", handleSearch);
-    searchBtn.addEventListener("click", handleSearch);
+        filterAndRenderMovies();
+    });
 
     categoryBtns.forEach(btn => {
         btn.addEventListener("click", () => {
             categoryBtns.forEach(b => b.classList.remove("active"));
             btn.classList.add("active");
             currentCategory = btn.dataset.category;
-            handleSearch();
+            currentPage = 1;
+            filterAndRenderMovies();
         });
     });
 
@@ -117,12 +99,13 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
 
     nextPageBtn.addEventListener("click", () => {
-        if (currentPage * moviesPerPage < filteredMovies.length) {
+        const totalPages = Math.ceil(filteredMovies.length / moviesPerPage);
+        if (currentPage < totalPages) {
             currentPage++;
             renderMovies();
         }
     });
 
+    // Initial load
     await fetchMovies();
 });
-
