@@ -1,8 +1,8 @@
-document.addEventListener("DOMContentLoaded", async function () {
-    const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
-    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
-
-    const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+Initializing
+import { createClient } from '@supabase/supabase-js'
+const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co'
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o'
+const supabase = createClient(supabaseUrl, supabaseKey)
 
     const movieList = document.getElementById("movie-list");
     const prevPageBtn = document.getElementById("prevPage");
