@@ -96,7 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 <p class="movie-title">${movie.title} (${movie.year})</p>
             `;
             movieContainer.addEventListener("click", () => {
-                window.location.href = `movie.html?id=${movie.id}`;
+                window.location.href = \`movie.html?slug=\${movie.slug}\`;
             });
             movieList.appendChild(movieContainer);
         });
@@ -146,3 +146,4 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchMovies();
 });
+
