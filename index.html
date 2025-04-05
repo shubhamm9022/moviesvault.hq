@@ -1,51 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Vault</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Vault</title>
+  <meta name="description" content="Stream and download the latest movies on Movie Vault. Updated daily.">
+  <meta name="keywords" content="Movie Vault, Movies, Download, Stream, Bollywood, Hollywood, Anime, Series">
+  <meta name="author" content="Movie Vault">
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <header>
-        <div class="logo-container">
-            <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
-        </div>
-        <div class="search-bar">
-            <input type="text" id="searchInput" placeholder="Search movies...">
-            <button id="searchBtn">Search</button>
-        </div>
-    </header>
-
-    <div class="categories">
-        <button class="category-btn active" data-category="all">All</button>
-        <button class="category-btn" data-category="hollywood">Hollywood</button>
-        <button class="category-btn" data-category="bollywood">Bollywood</button>
-        <button class="category-btn" data-category="anime">Anime</button>
-        <button class="category-btn" data-category="series">TV Series</button>
+  <header>
+    <div class="logo-container">
+      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
     </div>
-
-    <section id="movie-list">
-        <!-- Movies will be loaded here dynamically -->
-    </section>
-    
-    <div class="pagination">
-        <button id="prevPage">Previous</button>
-        <button id="nextPage">Next</button>
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search movies...">
+      <button id="searchBtn">Search</button>
     </div>
+  </header>
 
-    <footer>
-        <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
-        <nav class="footer-nav">
-            <a href="dmca.html">DMCA</a>
-            <a href="request.html">Request</a>
-            <a href="how-to-download.html">How to Download</a>
-            <a href="contact.html">Contact</a>
-            <a href="request-removal.html">Request Removal</a>
-        </nav>
-    </footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
-<script src="/js/app.js"></script>
+  <div class="categories">
+    <button class="category-btn active" data-category="all">All</button>
+    <button class="category-btn" data-category="hollywood">Hollywood</button>
+    <button class="category-btn" data-category="bollywood">Bollywood</button>
+    <button class="category-btn" data-category="anime">Anime</button>
+    <button class="category-btn" data-category="series">TV Series</button>
+  </div>
+
+  <!-- Notice Box -->
+  <div class="notice-box">
+    <strong>Notice:</strong> We update daily! Join our <a href="https://t.me/movievaulthq" target="_blank">Telegram Channel</a> for instant updates.
+  </div>
+
+  <!-- Movie List -->
+  <section id="movie-list">
+    <!-- Movies will be loaded here dynamically -->
+  </section>
+
+  <!-- Pagination -->
+  <div class="pagination">
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
+    <nav class="footer-nav">
+      <a href="dmca.html">DMCA</a>
+      <a href="request.html">Request</a>
+      <a href="how-to-download.html">How to Download</a>
+      <a href="contact.html">Contact</a>
+      <a href="request-removal.html">Request Removal</a>
+    </nav>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.39.4/dist/umd/supabase.min.js"></script>
+  <script src="/js/app.js"></script>
 </body>
 </html>
