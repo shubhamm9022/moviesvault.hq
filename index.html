@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,13 +10,21 @@
 <body>
     <header>
         <div class="logo-container">
-            <img src="logo.png" alt="MoviesVault.HQ Logo" class="logo" style="max-width: 100%; height: auto;">
+            <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
         </div>
-        <div class="search-bar" style="display: flex; align-items: center; gap: 10px;">
-            <input type="text" id="searchInput" placeholder="Search movies..." style="flex: 1; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-            <button onclick="searchMovies()" style="padding: 8px 12px; border: none; background-color: #28a745; color: white; border-radius: 5px; cursor: pointer;">Search</button>
+        <div class="search-bar">
+            <input type="text" id="searchInput" placeholder="Search movies...">
+            <button id="searchBtn">Search</button>
         </div>
     </header>
+
+    <div class="categories">
+        <button class="category-btn active" data-category="all">All</button>
+        <button class="category-btn" data-category="hollywood">Hollywood</button>
+        <button class="category-btn" data-category="bollywood">Bollywood</button>
+        <button class="category-btn" data-category="anime">Anime</button>
+        <button class="category-btn" data-category="series">TV Series</button>
+    </div>
 
     <section id="movie-list">
         <!-- Movies will be loaded here dynamically -->
@@ -28,13 +37,15 @@
 
     <footer>
         <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
-        <nav>
-            <a href="dmca.html" style="color: white; transition: color 0.3s ease-in-out;">▸ DMCA   </a>
-            <a href="request.html" style="color: white; transition: color 0.3s ease-in-out;">▸ Request   </a>
-            <a href="how-to-download.html" style="color: white; transition: color 0.3s ease-in-out;">▸ How to DL   </a>
+        <nav class="footer-nav">
+            <a href="dmca.html">DMCA</a>
+            <a href="request.html">Request</a>
+            <a href="how-to-download.html">How to Download</a>
+            <a href="contact.html">Contact</a>
+            <a href="request-removal.html">Request Removal</a>
         </nav>
     </footer>
 
-    <script type="module" src="app.js"></script>
+    <script src="app.js"></script>
 </body>
 </html>
