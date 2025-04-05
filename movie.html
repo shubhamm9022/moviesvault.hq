@@ -1,144 +1,70 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Details</title>
-    <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Watch and download your favorite movie on BollyFlix. High-quality print, fast streaming, and download links.">
+  <meta name="keywords" content="BollyFlix, movies, download, stream, HD movies, movie details">
+  <meta name="author" content="BollyFlix">
+  <title>Movie Details | BollyFlix</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body>
-    <header>
-        <div class="logo-container">
-            <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
-        </div>
-    </header>
-    
-    <section id="movie-details">
-        <img id="movie-poster" src="" alt="Movie Poster" class="movie-poster-large">
-        <div class="movie-info">
-            <h1 id="movie-title">Movie Title</h1>
-            <p id="movie-year"><strong>Year:</strong> <span></span></p>
-            <p id="movie-genre"><strong>Genre:</strong> <span></span></p>
-            <p id="movie-description"><strong>Description:</strong> <span>Loading description...</span></p>
-            <div class="buttons">
-                <a id="stream-link" href="#" target="_blank" class="stream-btn">Stream Now</a>
-                <a id="download-link" href="#" target="_blank" class="download-btn">Download</a>
+<body class="dark-theme">
+  <header class="header">
+    <h1 class="logo">BollyFlix</h1>
+    <a href="index.html" class="back-btn">← Back to Home</a>
+  </header>
+
+  <main class="movie-details-container" id="movie-details">
+    <p>Loading movie...</p>
+  </main>
+
+  <footer class="footer">
+    <p>&copy; 2025 BollyFlix. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", async function () {
+      const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
+      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+      const movieDetails = document.getElementById("movie-details");
+      const urlParams = new URLSearchParams(window.location.search);
+      const movieId = urlParams.get("id");
+
+      if (!movieId) {
+        movieDetails.innerHTML = "<p>Movie ID not found in URL.</p>";
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("movies")
+        .select("*")
+        .eq("id", movieId)
+        .single();
+
+      if (error || !data) {
+        movieDetails.innerHTML = "<p>Movie not found or error loading movie.</p>";
+        return;
+      }
+
+      movieDetails.innerHTML = `
+        <div class="movie-card-detail">
+          <img src="${data.image_url}" alt="${data.title}">
+          <div class="movie-info">
+            <h2>${data.title}</h2>
+            <p><strong>Category:</strong> ${data.category}</p>
+            <p><strong>Year:</strong> ${data.year || 'N/A'}</p>
+            <div class="movie-buttons">
+              <a class="btn" href="${data.download_link}" target="_blank">Download</a>
+              ${data.streaming_link ? `<a class="btn" href="${data.streaming_link}" target="_blank">Watch Online</a>` : ''}
             </div>
+          </div>
         </div>
-    </section>
-    
-    <footer>
-        <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
-        <nav class="footer-nav">
-            <a href="dmca.html">DMCA</a>
-            <a href="request.html">Request</a>
-            <a href="how-to-download.html">How to Download</a>
-            <a href="contact.html">Contact</a>
-        </nav>
-    </footer>
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            // Initialize Supabase
-            const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
-            const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
-            const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
-            const urlParams = new URLSearchParams(window.location.search);
-            const movieId = urlParams.get("id");
-
-            if (!movieId) {
-                document.getElementById("movie-details").innerHTML = "<p>Movie not found!</p>";
-                return;
-            }
-
-            async function fetchMovieDetails() {
-                try {
-                    let { data: movie, error } = await supabase
-                        .from('movies')
-                        .select('*')
-                        .eq('id', movieId)
-                        .single();
-
-                    if (error) throw error;
-                    if (!movie) throw new Error("Movie not found");
-
-                    document.getElementById("movie-title").textContent = movie.title;
-                    document.getElementById("movie-poster").src = movie.poster;
-                    document.getElementById("movie-year span").textContent = movie.year;
-                    document.getElementById("movie-genre span").textContent = movie.genre;
-                    document.getElementById("movie-description span").textContent = movie.description || "No description available.";
-                    document.getElementById("stream-link").href = movie.streamlink;
-                    document.getElementById("download-link").href = movie.downloadlink;
-                    
-                    // Fallback for broken poster images
-                    document.getElementById("movie-poster").onerror = function() {
-                        this.src = "https://via.placeholder.com/400x600?text=Poster+Not+Available";
-                    };
-                } catch (error) {
-                    console.error("Error fetching movie:", error);
-                    document.getElementById("movie-details").innerHTML = `
-                        <p class="error">Error loading movie details. Please try again later.</p>
-                        <a href="index.html" class="stream-btn">Back to Home</a>
-                    `;
-                }
-            }
-
-            fetchMovieDetails();
-        });
-    </script>
-
-<script type="module">
-  import { createClient } from "https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm";
-
-  const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
-  const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
-  const supabase = createClient(supabaseUrl, supabaseKey);
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const slug = urlParams.get('slug');
-
-  async function fetchMovieDetails() {
-    const { data, error } = await supabase
-      .from('movies')
-      .select('*')
-      .eq('slug', slug)
-      .single();
-
-    if (error) {
-      console.error('Error fetching movie:', error);
-      return;
-    }
-
-    document.getElementById('movie-title').textContent = data.title;
-    document.querySelector('#movie-year span').textContent = data.year;
-    document.querySelector('#movie-genre span').textContent = data.genre;
-    document.querySelector('#movie-description span').textContent = data.description;
-    document.getElementById('movie-poster').src = data.poster;
-    document.getElementById('stream-link').href = data.streamlink;
-    document.getElementById('download-link').href = data.downloadlink;
-  }
-
-  fetchMovieDetails();
-</script>
-
+      `;
+    });
+  </script>
 </body>
 </html>
-// In movie.html, enhance the error state
-} catch (error) {
-    console.error("Error fetching movie:", error);
-    document.getElementById("movie-details").innerHTML = `
-        <div class="error-state">
-            <h2>Oops! Something went wrong</h2>
-            <p>We couldn't load this movie. Please try again later.</p>
-            <a href="index.html" class="back-btn">← Back to Home</a>
-            <div class="recommendations">
-                <h3>You might also like:</h3>
-                <!-- Could add popular movies here -->
-            </div>
-        </div>
-    `;
-}
-
