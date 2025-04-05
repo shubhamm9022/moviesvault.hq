@@ -17,58 +17,59 @@ document.addEventListener("DOMContentLoaded", function () {
     const moviesPerPage = 12;
     let currentCategory = "all";
 
-    // Replace your fetchMovies function with this debug version
-async function fetchMovies() {
-    try {
-        console.log("Fetching movies from Supabase...");
-        let { data, error } = await supabase
-            .from('movies')
-            .select('*')
-            .order('id', { ascending: false });
-
-        if (error) {
-            console.error("Supabase error:", error);
-            return;
-        }
-
-        console.log("Received data:", data);
-        
-        if (!data || data.length === 0) {
-            console.warn("No movies found in database");
-            movieList.innerHTML = `<p class="error">No movies available. Check back later.</p>`;
-            return;
-        }
-
-        movies = data.map(movie => ({
-            id: movie.id,
-            title: movie.title,
-            year: movie.year,
-            poster: movie.poster || 'https://via.placeholder.com/200x300?text=No+Poster',
-            stream: movie.streamlink,
-            download: movie.downloadlink,
-            category: (movie.genre || 'hollywood').toLowerCase(),
-            description: movie.description,
-            slug: movie.slug
-        }));
-
-        console.log("Processed movies:", movies);
-        filteredMovies = [...movies];
-        renderMovies();
-    } catch (error) {
-        console.error("Critical error:", error);
+    async function fetchMovies() {
         movieList.innerHTML = `
-            <p class="error">Failed to load movies. 
-            <button onclick="window.location.reload()">Retry</button>
-            </p>
+            <div class="skeleton-container">
+                ${Array(moviesPerPage).fill().map(() => `
+                    <div class="movie-container">
+                        <div class="skeleton skeleton-poster"></div>
+                        <div class="skeleton skeleton-text" style="width:80%"></div>
+                        <div class="skeleton skeleton-text" style="width:60%"></div>
+                    </div>
+                `).join('')}
+            </div>
         `;
-    }
-}
 
-            filteredMovies = [...movies];
+        try {
+            let { data, error } = await supabase
+                .from('movies')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) throw error;
+            
+            movies = data.map(movie => ({
+                id: movie.id,
+                title: movie.title || 'Untitled Movie',
+                year: movie.year || 'N/A',
+                poster: movie.poster || 'https://via.placeholder.com/200x300?text=No+Poster',
+                stream: isValidUrl(movie.streamlink) ? movie.streamlink : null,
+                download: isValidUrl(movie.downloadlink) ? movie.downloadlink : null,
+                category: (movie.genre || 'uncategorized').toLowerCase().replace(/\s+/g, '-'),
+                description: movie.description || 'No description available',
+                slug: (movie.slug || '').trim().replace(/\n/g, '')
+            }));
+
+            filteredMovies = movies.filter(m => m.poster && !m.poster.includes('placeholder'));
             renderMovies();
         } catch (error) {
-            console.error("Error fetching movies:", error);
-            movieList.innerHTML = `<p class="error">Error loading movies. Please try again later.</p>`;
+            console.error("Error:", error);
+            movieList.innerHTML = `
+                <div class="error">
+                    <p>Failed to load movies. Try refreshing.</p>
+                    <button onclick="window.location.reload()">Retry</button>
+                </div>
+            `;
+        }
+    }
+
+    function isValidUrl(string) {
+        if (!string) return false;
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
         }
     }
 
@@ -79,7 +80,7 @@ async function fetchMovies() {
         const paginatedMovies = filteredMovies.slice(start, end);
 
         if (paginatedMovies.length === 0) {
-            movieList.innerHTML = `<p class="no-results">No movies found. Try a different search or category.</p>`;
+            movieList.innerHTML = `<p class="no-results">No movies found. Try a different search.</p>`;
             return;
         }
 
@@ -87,7 +88,11 @@ async function fetchMovies() {
             const movieContainer = document.createElement("div");
             movieContainer.classList.add("movie-container");
             movieContainer.innerHTML = `
-                <img src="${movie.poster}" class="movie-poster" alt="${movie.title}" onerror="this.src='https://via.placeholder.com/200x300?text=Poster+Not+Available'">
+                <img loading="lazy" 
+                     src="${movie.poster}" 
+                     class="movie-poster" 
+                     alt="${movie.title}"
+                     onerror="this.src='https://via.placeholder.com/200x300?text=Poster+Not+Available'">
                 <p class="movie-title">${movie.title} (${movie.year})</p>
             `;
             movieContainer.addEventListener("click", () => {
@@ -100,7 +105,7 @@ async function fetchMovies() {
         nextPageBtn.disabled = end >= filteredMovies.length;
     }
 
-    // Event Listeners (same as before)
+    // Event Listeners
     prevPageBtn.addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
@@ -141,10 +146,3 @@ async function fetchMovies() {
 
     fetchMovies();
 });
-// Add lazy loading for images in app.js
-movieContainer.innerHTML = `
-    <img loading="lazy" src="${movie.poster}" class="movie-poster" 
-         alt="${movie.title}" 
-         onerror="this.src='https://via.placeholder.com/200x300?text=Poster+Not+Available'">
-    <p class="movie-title">${movie.title} (${movie.year})</p>
-`;
