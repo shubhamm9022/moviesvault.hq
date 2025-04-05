@@ -17,26 +17,52 @@ document.addEventListener("DOMContentLoaded", function () {
     const moviesPerPage = 12;
     let currentCategory = "all";
 
-    async function fetchMovies() {
-        try {
-            let { data, error } = await supabase
-                .from('movies')
-                .select('*')
-                .order('id', { ascending: false });
+    // Replace your fetchMovies function with this debug version
+async function fetchMovies() {
+    try {
+        console.log("Fetching movies from Supabase...");
+        let { data, error } = await supabase
+            .from('movies')
+            .select('*')
+            .order('id', { ascending: false });
 
-            if (error) throw error;
-            
-            movies = data.map(movie => ({
-                id: movie.id,
-                title: movie.title,
-                year: movie.year,
-                poster: movie.poster,
-                stream: movie.streamlink,
-                download: movie.downloadlink,
-                category: movie.genre.toLowerCase(),
-                description: movie.description,
-                slug: movie.slug
-            }));
+        if (error) {
+            console.error("Supabase error:", error);
+            return;
+        }
+
+        console.log("Received data:", data);
+        
+        if (!data || data.length === 0) {
+            console.warn("No movies found in database");
+            movieList.innerHTML = `<p class="error">No movies available. Check back later.</p>`;
+            return;
+        }
+
+        movies = data.map(movie => ({
+            id: movie.id,
+            title: movie.title,
+            year: movie.year,
+            poster: movie.poster || 'https://via.placeholder.com/200x300?text=No+Poster',
+            stream: movie.streamlink,
+            download: movie.downloadlink,
+            category: (movie.genre || 'hollywood').toLowerCase(),
+            description: movie.description,
+            slug: movie.slug
+        }));
+
+        console.log("Processed movies:", movies);
+        filteredMovies = [...movies];
+        renderMovies();
+    } catch (error) {
+        console.error("Critical error:", error);
+        movieList.innerHTML = `
+            <p class="error">Failed to load movies. 
+            <button onclick="window.location.reload()">Retry</button>
+            </p>
+        `;
+    }
+}
 
             filteredMovies = [...movies];
             renderMovies();
