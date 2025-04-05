@@ -115,3 +115,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
     fetchMovies();
 });
+// Add lazy loading for images in app.js
+movieContainer.innerHTML = `
+    <img loading="lazy" src="${movie.poster}" class="movie-poster" 
+         alt="${movie.title}" 
+         onerror="this.src='https://via.placeholder.com/200x300?text=Poster+Not+Available'">
+    <p class="movie-title">${movie.title} (${movie.year})</p>
+`;
