@@ -110,3 +110,11 @@ document.addEventListener("DOMContentLoaded", async function() {
   // Initial load
   fetchMovies();
 });
+console.log("Connecting to Supabase...");
+
+const supabase = supabase.createClient('your-url', 'your-key');
+
+async function fetchMovies() {
+  const { data, error } = await supabase.from("movies").select("*");
+  console.log("Fetched:", data, error);
+}
