@@ -1,4 +1,9 @@
 document.addEventListener("DOMContentLoaded", function () {
+    // Initialize Supabase
+    const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
     const movieList = document.getElementById("movie-list");
     const prevPageBtn = document.getElementById("prevPage");
     const nextPageBtn = document.getElementById("nextPage");
@@ -12,38 +17,33 @@ document.addEventListener("DOMContentLoaded", function () {
     const moviesPerPage = 12;
     let currentCategory = "all";
 
-    // Google Sheet CSV link
-    const sheetURL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vR0D7_9n5fJGj30Erv8CEr3rz7UGPh3qdvSx79RiVCf2iuT_yZw51mr-9cdGxpyXbSPTbYXcuHC8cPk/pub?output=csv";
-
     async function fetchMovies() {
         try {
-            const response = await fetch(sheetURL);
-            const data = await response.text();
-            parseCSV(data);
+            let { data, error } = await supabase
+                .from('movies')
+                .select('*')
+                .order('id', { ascending: false });
+
+            if (error) throw error;
+            
+            movies = data.map(movie => ({
+                id: movie.id,
+                title: movie.title,
+                year: movie.year,
+                poster: movie.poster,
+                stream: movie.streamlink,
+                download: movie.downloadlink,
+                category: movie.genre.toLowerCase(),
+                description: movie.description,
+                slug: movie.slug
+            }));
+
+            filteredMovies = [...movies];
+            renderMovies();
         } catch (error) {
-            console.error("Error fetching movie data:", error);
+            console.error("Error fetching movies:", error);
+            movieList.innerHTML = `<p class="error">Error loading movies. Please try again later.</p>`;
         }
-    }
-
-    function parseCSV(data) {
-        const rows = data.split("\n").slice(1); // Skip headers
-        movies = rows.map(row => {
-            const columns = row.split(",");
-            if (columns.length < 4) return null; // Ensure valid data
-            return {
-                title: columns[0].trim(),
-                year: columns[1].trim(),
-                poster: columns[2].trim(),
-                stream: columns[3].trim(),
-                download: columns[4].trim(),
-                id: columns[5].trim(),
-                category: columns[6]?.trim() || "hollywood"
-            };
-        }).filter(movie => movie); // Remove null values
-
-        movies.reverse(); // Show latest movies first
-        filteredMovies = [...movies];
-        renderMovies();
     }
 
     function renderMovies() {
@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", function () {
         nextPageBtn.disabled = end >= filteredMovies.length;
     }
 
-    // Event Listeners
+    // Event Listeners (same as before)
     prevPageBtn.addEventListener("click", () => {
         if (currentPage > 1) {
             currentPage--;
