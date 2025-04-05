@@ -15,15 +15,16 @@
     </header>
     
     <section id="movie-details">
-        <img id="movie-poster" src="" alt="Movie Poster" class="movie-poster-large">
+        <!-- Skeleton loading -->
+        <div class="skeleton skeleton-poster-large"></div>
         <div class="movie-info">
-            <h1 id="movie-title">Movie Title</h1>
-            <p id="movie-year"><strong>Year:</strong> <span></span></p>
-            <p id="movie-genre"><strong>Genre:</strong> <span></span></p>
-            <p id="movie-description"><strong>Description:</strong> <span>Loading description...</span></p>
+            <div class="skeleton skeleton-text" style="width:70%; height:2.5rem;"></div>
+            <div class="skeleton skeleton-text" style="width:50%;"></div>
+            <div class="skeleton skeleton-text" style="width:60%;"></div>
+            <div class="skeleton skeleton-text" style="height:8rem;"></div>
             <div class="buttons">
-                <a id="stream-link" href="#" target="_blank" class="stream-btn">Stream Now</a>
-                <a id="download-link" href="#" target="_blank" class="download-btn">Download</a>
+                <div class="skeleton skeleton-text" style="width:120px; height:45px;"></div>
+                <div class="skeleton skeleton-text" style="width:120px; height:45px;"></div>
             </div>
         </div>
     </section>
@@ -41,7 +42,6 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Initialize Supabase
             const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
             const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
             const supabase = supabase.createClient(supabaseUrl, supabaseKey);
@@ -50,7 +50,7 @@
             const movieId = urlParams.get("id");
 
             if (!movieId) {
-                document.getElementById("movie-details").innerHTML = "<p>Movie not found!</p>";
+                showError("Movie ID not found in URL");
                 return;
             }
 
@@ -65,25 +65,41 @@
                     if (error) throw error;
                     if (!movie) throw new Error("Movie not found");
 
-                    document.getElementById("movie-title").textContent = movie.title;
-                    document.getElementById("movie-poster").src = movie.poster;
-                    document.getElementById("movie-year span").textContent = movie.year;
-                    document.getElementById("movie-genre span").textContent = movie.genre;
-                    document.getElementById("movie-description span").textContent = movie.description || "No description available.";
-                    document.getElementById("stream-link").href = movie.streamlink;
-                    document.getElementById("download-link").href = movie.downloadlink;
-                    
-                    // Fallback for broken poster images
-                    document.getElementById("movie-poster").onerror = function() {
-                        this.src = "https://via.placeholder.com/400x600?text=Poster+Not+Available";
-                    };
+                    renderMovie(movie);
                 } catch (error) {
-                    console.error("Error fetching movie:", error);
-                    document.getElementById("movie-details").innerHTML = `
-                        <p class="error">Error loading movie details. Please try again later.</p>
-                        <a href="index.html" class="stream-btn">Back to Home</a>
-                    `;
+                    console.error("Error:", error);
+                    showError(error.message);
                 }
+            }
+
+            function renderMovie(movie) {
+                const detailsSection = document.getElementById("movie-details");
+                detailsSection.innerHTML = `
+                    <img id="movie-poster" src="${movie.poster || 'https://via.placeholder.com/400x600?text=No+Poster'}" 
+                         alt="${movie.title}" 
+                         class="movie-poster-large"
+                         onerror="this.src='https://via.placeholder.com/400x600?text=Poster+Not+Available'">
+                    <div class="movie-info">
+                        <h1 id="movie-title">${movie.title || 'Untitled Movie'}</h1>
+                        <p id="movie-year"><strong>Year:</strong> ${movie.year || 'N/A'}</p>
+                        <p id="movie-genre"><strong>Genre:</strong> ${movie.genre || 'Not specified'}</p>
+                        <p id="movie-description"><strong>Description:</strong> ${movie.description || 'No description available.'}</p>
+                        <div class="buttons">
+                            ${movie.streamlink ? `<a href="${movie.streamlink}" target="_blank" class="stream-btn">Stream Now</a>` : ''}
+                            ${movie.downloadlink ? `<a href="${movie.downloadlink}" target="_blank" class="download-btn">Download</a>` : ''}
+                        </div>
+                    </div>
+                `;
+            }
+
+            function showError(message) {
+                document.getElementById("movie-details").innerHTML = `
+                    <div class="error-state">
+                        <h2>Oops! Something went wrong</h2>
+                        <p>${message}</p>
+                        <a href="index.html" class="back-btn">← Back to Home</a>
+                    </div>
+                `;
             }
 
             fetchMovieDetails();
@@ -91,18 +107,3 @@
     </script>
 </body>
 </html>
-// In movie.html, enhance the error state
-} catch (error) {
-    console.error("Error fetching movie:", error);
-    document.getElementById("movie-details").innerHTML = `
-        <div class="error-state">
-            <h2>Oops! Something went wrong</h2>
-            <p>We couldn't load this movie. Please try again later.</p>
-            <a href="index.html" class="back-btn">← Back to Home</a>
-            <div class="recommendations">
-                <h3>You might also like:</h3>
-                <!-- Could add popular movies here -->
-            </div>
-        </div>
-    `;
-}
