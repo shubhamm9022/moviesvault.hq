@@ -2,44 +2,126 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Watch and download your favorite movie on Movie Vault. High-quality print, fast streaming, and download links.">
-  <meta name="keywords" content="Movie Vault, movies, download, stream, HD movies, movie details">
-  <meta name="author" content="Movie Vault">
-  <title>Movie Details | Movie Vault</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- Dynamic SEO Meta (updated via JS) -->
+  <title>Loading Movie...</title>
+  <meta name="description" content="Watch and download your favorite movies online." />
+  <meta name="keywords" content="movies, download, stream, bollyflix, hollywood, bollywood, south" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Shubham" />
+
+  <!-- Open Graph for Social Sharing -->
+  <meta property="og:title" content="Movie Title" />
+  <meta property="og:description" content="Watch and download full HD movies online." />
+  <meta property="og:image" content="poster.jpg" />
+  <meta property="og:url" content="https://yourdomain.com/movie.html" />
+  <meta property="og:type" content="video.movie" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Movie Title" />
+  <meta name="twitter:description" content="Watch and download movies online for free." />
+  <meta name="twitter:image" content="poster.jpg" />
+
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #0f0f0f;
+      color: #f1f1f1;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      padding: 1rem;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    .movie-detail-card {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .detail-poster {
+      width: 100%;
+      border-radius: 8px;
+      max-height: 500px;
+      object-fit: cover;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .movie-info h1 {
+      font-size: 2rem;
+      margin: 0.5rem 0;
+    }
+
+    .movie-actions {
+      margin-top: 1rem;
+    }
+
+    .download-btn, .stream-btn {
+      background-color: #e50914;
+      color: white;
+      padding: 0.75rem 1.25rem;
+      margin-right: 1rem;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: background 0.3s ease;
+      display: inline-block;
+    }
+
+    .download-btn:hover, .stream-btn:hover {
+      background-color: #b2060f;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-top: 2rem;
+    }
+
+    @media screen and (min-width: 768px) {
+      .movie-detail-card {
+        flex-direction: row;
+        align-items: flex-start;
+      }
+
+      .detail-poster {
+        width: 45%;
+      }
+
+      .movie-info {
+        flex: 1;
+        padding-left: 1rem;
+      }
+    }
+  </style>
 </head>
 <body>
-  <header>
-    <div class="logo-container">
-      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
+  <div class="container">
+    <div id="movie-details">
+      <p>Loading movie details...</p>
     </div>
-    <a href="index.html" class="back-btn">← Back to Home</a>
-  </header>
+  </div>
 
-  <main class="movie-details-container" id="movie-details">
-    <p>Loading movie details...</p>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
-    <nav class="footer-nav">
-      <a href="dmca.html">DMCA</a>
-      <a href="request.html">Request</a>
-      <a href="how-to-download.html">How to Download</a>
-      <a href="contact.html">Contact</a>
-      <a href="request-removal.html">Request Removal</a>
-    </nav>
-  </footer>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
-    document.addEventListener("DOMContentLoaded", async function () {
-      const supabaseUrl = 'https://ordokuzipdgijvuvus.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yZG9rdWV6ZGlwZ2x5aXZxd3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzAzMzcsImV4cCI6MjA1OTQ0NjMzN30.cEQ5G4b83Hd-lnfBKm6wLPZwa2mwpVY78tqFBuWdvjY';
-      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    // Disable right-click & dev tools
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (
+        e.key === 'F12' ||
+        (e.ctrlKey && e.shiftKey && ['I', 'C', 'J'].includes(e.key.toUpperCase()))
+      ) {
+        e.preventDefault();
+      }
+    });
 
+    async function loadMovie() {
       const movieDetails = document.getElementById("movie-details");
       const urlParams = new URLSearchParams(window.location.search);
       const movieId = urlParams.get("id");
@@ -50,34 +132,43 @@
       }
 
       try {
-        const { data, error } = await supabase
-          .from('movie_details')
-          .select('*')
-          .eq('id', movieId)
-          .single();
+        const res = await fetch("https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet1");
+        const data = await res.json();
+        const movie = data.find(m => m.id === movieId);
 
-        if (error) throw error;
-        if (!data) throw new Error('Movie not found');
+        if (!movie) throw new Error("Movie not found");
+
+        // Update SEO Meta
+        document.title = `${movie.title} (${movie.year}) | Watch & Download`;
+        document.querySelector("meta[name='description']").setAttribute("content", `Stream or download ${movie.title} (${movie.year}) in full HD quality for free.`);
+        document.querySelector("meta[property='og:title']").setAttribute("content", movie.title);
+        document.querySelector("meta[property='og:description']").setAttribute("content", `Watch or download ${movie.title} now.`);
+        document.querySelector("meta[property='og:image']").setAttribute("content", movie.poster_url);
+        document.querySelector("meta[name='twitter:title']").setAttribute("content", movie.title);
+        document.querySelector("meta[name='twitter:description']").setAttribute("content", `Watch or download ${movie.title} now.`);
+        document.querySelector("meta[name='twitter:image']").setAttribute("content", movie.poster_url);
 
         movieDetails.innerHTML = `
           <div class="movie-detail-card">
-            <img src="${data.poster_url}" alt="${data.title}" class="detail-poster" onerror="this.src='placeholder.jpg'">
+            <img src="${movie.poster_url}" alt="${movie.title}" class="detail-poster" onerror="this.src='placeholder.jpg'" oncontextmenu="return false;" draggable="false" />
             <div class="movie-info">
-              <h1>${data.title} (${data.year})</h1>
-              <p><strong>Genre:</strong> ${data.genre}</p>
-              <p><strong>Description:</strong> ${data.description || 'No description available'}</p>
+              <h1>${movie.title} (${movie.year})</h1>
+              <p><strong>Genre:</strong> ${movie.genre}</p>
+              <p><strong>Description:</strong> ${movie.description || 'No description available.'}</p>
               <div class="movie-actions">
-                ${data.download_link ? `<a href="${data.download_link}" class="download-btn" target="_blank">Download</a>` : ''}
-                ${data.streaming_link ? `<a href="${data.streaming_link}" class="stream-btn" target="_blank">Watch Online</a>` : ''}
+                ${movie.streaming_link ? `<a href="${movie.streaming_link}" class="stream-btn" target="_blank" rel="noopener noreferrer">Watch Online</a>` : ''}
+                ${movie.download_link ? `<a href="${movie.download_link}" class="download-btn" target="_blank" rel="noopener noreferrer">Download</a>` : ''}
               </div>
             </div>
           </div>
         `;
-      } catch (error) {
-        console.error('Error loading movie:', error);
-        movieDetails.innerHTML = `<p class='error'>Error loading movie: ${error.message}</p>`;
+      } catch (err) {
+        console.error(err);
+        movieDetails.innerHTML = `<p class="error">Failed to load movie: ${err.message}</p>`;
       }
-    });
+    }
+
+    loadMovie();
   </script>
 </body>
 </html>
