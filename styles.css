@@ -125,7 +125,7 @@ border-radius: 2px;
 overflow: hidden;
 transition: transform 0.3s, box-shadow 0.3s;
 cursor: pointer;
-border:none;
+border: 1px solid var(--secondary);
 }
 
 .movie-card:hover {
@@ -154,7 +154,7 @@ color: var(--text-secondary);
 .movie-card a {
 display: block;
 padding: 0.5rem;
-background-color: var(--primary);
+background-color: var(--light-dark);
 color: var(--light-dark);
 text-align: center;
 text-decoration: none;
@@ -400,4 +400,4 @@ flex-direction: column;
 .stream-btn, .download-btn {
 width: 100%;
 }
-}
+} 
