@@ -37,7 +37,7 @@ header {
 }
 
 .logo {
-  max-height: 80px;
+  max-height: 90px;
   width: auto;
 }
 
@@ -154,14 +154,14 @@ header {
   display: block;
   padding: 0.5rem;
   background-color: var(--primary);
-  color: var(--dark);
+  color: var(--light-dark);
   text-align: center;
   text-decoration: none;
   font-weight: bold;
 }
 
 .movie-card a:hover {
-  background-color: #333;
+  background-color: #28a745;
 }
 
 /* Pagination */
