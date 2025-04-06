@@ -26,6 +26,7 @@ const itemsPerPage = 10;
 
 // 👉 Fetch Movies from Supabase
 // ✅ Then use it in your code
+// ✅ Fetch Movies from Supabase
 async function fetchMovies() {
   const { data, error } = await supabase
     .from('movie_details')
@@ -38,13 +39,13 @@ async function fetchMovies() {
   }
 
   console.log('Movies:', data);
-  // render movies...
-}
 
   movies = data;
   filteredMovies = data;
   renderMovies();
   renderPagination();
+} // ✅ Only ONE closing brace here
+
 
 
 // 👉 Render Movies on Page
