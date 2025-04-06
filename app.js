@@ -44,10 +44,11 @@ function renderMovies() {
 
   movieContainer.innerHTML = currentMovies.map(movie => `
     <div class="movie-card animate-fade-in">
-      <img src="${movie.poster_url}" alt="${movie.title}" class="poster" onerror="this.src='placeholder.jpg'" oncontextmenu="return false;" draggable="false" />
-      <h3>${movie.title} (${movie.year})</h3>
-      <p>${movie.genre}</p>
-      <a href="movie.html?id=${movie.id}" class="details-btn">View Details</a>
+      <a href="movie.html?id=${movie.id}">
+        <img src="${movie.poster_url}" alt="${movie.title}" class="poster" onerror="this.src='placeholder.jpg'" oncontextmenu="return false;" draggable="false" />
+        <h3>${movie.title} (${movie.year})</h3>
+        <p>${movie.genre}</p>
+      </a>
     </div>
   `).join('');
 }
