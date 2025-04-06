@@ -117,24 +117,26 @@ header {
   gap: 1rem;
   padding: 1rem;
 }
-
 .movie-card {
   background-color: var(--light-dark);
-  border-radius: 2px;
+  border-radius: 12px;
   overflow: hidden;
   transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
-  border: 1px solid var(--secondary);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .movie-card:hover {
   transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
 }
 
 .movie-card img {
   width: 100%;
   height: auto;
+  display: block;
+  border-radius: 12px 12px 0 0; /* Rounded top corners only */
+  object-fit: cover;
 }
 
 .movie-card h3 {
