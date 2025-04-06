@@ -11,17 +11,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <!-- Header -->
   <header>
     <div class="logo-container">
-      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo" draggable="false" oncontextmenu="return false;"></a>
+      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
     </div>
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search movies...">
+      <button id="searchBtn">Search</button>
     </div>
   </header>
 
-  <!-- Categories -->
   <div class="categories">
     <button class="category-btn active" data-category="all">All</button>
     <button class="category-btn" data-category="hollywood">Hollywood</button>
@@ -35,14 +34,15 @@
     <strong>Notice:</strong> We update daily! Join our <a href="https://t.me/movievaulthq" target="_blank">Telegram Channel</a> for instant updates.
   </div>
 
-  <!-- Movie Grid -->
+  <!-- Movie List -->
   <section id="movie-container">
-    <!-- Movies will be dynamically inserted here -->
+    <!-- Movies will be loaded here dynamically -->
   </section>
 
   <!-- Pagination -->
-  <div id="pagination" class="pagination">
-    <!-- Page buttons will be injected here -->
+  <div class="pagination" id="pagination">
+    <button id="prevPage">Previous</button>
+    <button id="nextPage">Next</button>
   </div>
 
   <!-- Footer -->
@@ -62,4 +62,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
