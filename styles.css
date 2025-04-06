@@ -283,3 +283,120 @@ footer {
   font-size: 1rem;
   margin-top: 8px;
 }
+/* Movie Details Page Styles */
+.movie-details-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.movie-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.movie-poster-container {
+  text-align: center;
+}
+
+.detail-poster {
+  max-width: 100%;
+  height: auto;
+  max-height: 70vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.movie-content {
+  color: #fff;
+}
+
+.movie-content h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.movie-year, .movie-genre {
+  color: #aaa;
+  margin-bottom: 0.5rem;
+}
+
+.movie-description {
+  line-height: 1.6;
+  margin: 1.5rem 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.stream-btn, .download-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.stream-btn {
+  background-color: #e50914;
+  color: white;
+}
+
+.download-btn {
+  background-color: #221f1f;
+  color: white;
+  border: 1px solid #444;
+}
+
+.stream-btn:hover {
+  background-color: #f40612;
+  transform: translateY(-2px);
+}
+
+.download-btn:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+/* Responsive styles for movie page */
+@media (min-width: 768px) {
+  .movie-wrapper {
+    flex-direction: row;
+  }
+  
+  .movie-poster-container {
+    flex: 0 0 40%;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+  }
+  
+  .movie-content {
+    flex: 1;
+  }
+  
+  .action-buttons {
+    justify-content: flex-start;
+  }
+  
+  .stream-btn, .download-btn {
+    flex: 0 1 200px;
+  }
+}
+
+@media (max-width: 767px) {
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .stream-btn, .download-btn {
+    width: 100%;
+  }
+}
