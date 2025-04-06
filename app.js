@@ -1,9 +1,10 @@
-// ✅ First: Import Supabase client
-const { createClient } = supabase;
-// 👉 Initialize Supabase
-const supabaseUrl = 'https://ordokuezdipglyivqwus.supabase.co';
-const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yZG9rdWV6ZGlwZ2x5aXZxd3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzAzMzcsImV4cCI6MjA1OTQ0NjMzN30.cEQ5G4b83Hd-lnfBKm6wLPZwa2mwpVY78tqFBuWdvjY';
-const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+// ✅ Correct way to import createClient
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js/+esm';
+
+// ✅ Then initialize Supabase
+const supabaseUrl = 'https://ordokuzipdgijvuvus.supabase.co';
+const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yZG9rdWV6ZGlwZ2x5aXZxd3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzAzMzcsImV4cCI6MjA1OTQ0NjMzN30.cEQ5G4b83Hd-lnfBKm6wLPZwa2mwpVY78tqFBuWdvjY'; // Replace with your actual anon key
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 // 👉 Protect Assets
 document.addEventListener('contextmenu', e => e.preventDefault());
