@@ -47,7 +47,6 @@ function renderMovies() {
       <a href="movie.html?id=${movie.id}">
         <img src="${movie.poster_url}" alt="${movie.title}" class="poster" onerror="this.src='placeholder.jpg'" oncontextmenu="return false;" draggable="false" />
         <h3>${movie.title} (${movie.year})</h3>
-        <p>${movie.genre}</p>
       </a>
     </div>
   `).join('');
