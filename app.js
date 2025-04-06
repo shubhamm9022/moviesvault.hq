@@ -45,7 +45,7 @@ async function fetchMovies() {
   filteredMovies = data;
   renderMovies();
   renderPagination();
-}
+
 
 // 👉 Render Movies on Page
 function renderMovies() {
