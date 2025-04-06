@@ -3,67 +3,80 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta name="description" content="Watch and download your favorite movie on BollyFlix. High-quality print, fast streaming, and download links.">
-  <meta name="keywords" content="BollyFlix, movies, download, stream, HD movies, movie details">
-  <meta name="author" content="BollyFlix">
-  <title>Movie Details | BollyFlix</title>
-  <link rel="stylesheet" href="style.css" />
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <meta name="description" content="Watch and download your favorite movie on Movie Vault. High-quality print, fast streaming, and download links.">
+  <meta name="keywords" content="Movie Vault, movies, download, stream, HD movies, movie details">
+  <meta name="author" content="Movie Vault">
+  <title>Movie Details | Movie Vault</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
-<body class="dark-theme">
-  <header class="header">
-    <h1 class="logo">BollyFlix</h1>
+<body>
+  <header>
+    <div class="logo-container">
+      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
+    </div>
     <a href="index.html" class="back-btn">← Back to Home</a>
   </header>
 
   <main class="movie-details-container" id="movie-details">
-    <p>Loading movie...</p>
+    <p>Loading movie details...</p>
   </main>
 
-  <footer class="footer">
-    <p>&copy; 2025 BollyFlix. All rights reserved.</p>
+  <footer>
+    <p>&copy; 2025 Movie Vault. All Rights Reserved.</p>
+    <nav class="footer-nav">
+      <a href="dmca.html">DMCA</a>
+      <a href="request.html">Request</a>
+      <a href="how-to-download.html">How to Download</a>
+      <a href="contact.html">Contact</a>
+      <a href="request-removal.html">Request Removal</a>
+    </nav>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script>
     document.addEventListener("DOMContentLoaded", async function () {
-      const supabaseUrl = 'https://tymkbfpmbgrdxgvqpgzo.supabase.co';
-      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5bWtiZnBtYmdyZHhndnFwZ3pvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4MjQyOTYsImV4cCI6MjA1OTQwMDI5Nn0.9ZT2oHJn-QYBNk8KWEbM25UVtz5W1-fcnRehVADyx7o';
-      const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+      const supabaseUrl = 'https://ordokuzipdgijvuvus.supabase.co';
+      const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9yZG9rdWV6ZGlwZ2x5aXZxd3VzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDM4NzAzMzcsImV4cCI6MjA1OTQ0NjMzN30.cEQ5G4b83Hd-lnfBKm6wLPZwa2mwpVY78tqFBuWdvjY';
+      const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
       const movieDetails = document.getElementById("movie-details");
       const urlParams = new URLSearchParams(window.location.search);
       const movieId = urlParams.get("id");
 
       if (!movieId) {
-        movieDetails.innerHTML = "<p>Movie ID not found in URL.</p>";
+        movieDetails.innerHTML = "<p class='error'>Movie ID not found in URL.</p>";
         return;
       }
 
-      const { data, error } = await supabase
-        .from("movies")
-        .select("*")
-        .eq("id", movieId)
-        .single();
+      try {
+        const { data, error } = await supabase
+          .from('movie_details')
+          .select('*')
+          .eq('id', movieId)
+          .single();
 
-      if (error || !data) {
-        movieDetails.innerHTML = "<p>Movie not found or error loading movie.</p>";
-        return;
-      }
+        if (error) throw error;
+        if (!data) throw new Error('Movie not found');
 
-      movieDetails.innerHTML = `
-        <div class="movie-card-detail">
-          <img src="${data.image_url}" alt="${data.title}">
-          <div class="movie-info">
-            <h2>${data.title}</h2>
-            <p><strong>Category:</strong> ${data.category}</p>
-            <p><strong>Year:</strong> ${data.year || 'N/A'}</p>
-            <div class="movie-buttons">
-              <a class="btn" href="${data.download_link}" target="_blank">Download</a>
-              ${data.streaming_link ? `<a class="btn" href="${data.streaming_link}" target="_blank">Watch Online</a>` : ''}
+        movieDetails.innerHTML = `
+          <div class="movie-detail-card">
+            <img src="${data.poster_url}" alt="${data.title}" class="detail-poster" onerror="this.src='placeholder.jpg'">
+            <div class="movie-info">
+              <h1>${data.title} (${data.year})</h1>
+              <p><strong>Genre:</strong> ${data.genre}</p>
+              <p><strong>Description:</strong> ${data.description || 'No description available'}</p>
+              <div class="movie-actions">
+                ${data.download_link ? `<a href="${data.download_link}" class="download-btn" target="_blank">Download</a>` : ''}
+                ${data.streaming_link ? `<a href="${data.streaming_link}" class="stream-btn" target="_blank">Watch Online</a>` : ''}
+              </div>
             </div>
           </div>
-        </div>
-      `;
+        `;
+      } catch (error) {
+        console.error('Error loading movie:', error);
+        movieDetails.innerHTML = `<p class='error'>Error loading movie: ${error.message}</p>`;
+      }
     });
   </script>
 </body>
