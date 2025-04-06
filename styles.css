@@ -247,3 +247,39 @@ footer {
     font-size: 0.8rem;
   }
 }
+/* Grid container */
+#movie-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); /* 150px poster width */
+  gap: 20px;
+  padding: 20px;
+}
+
+/* Individual card */
+.movie-card {
+  background: #111;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  text-align: center;
+  padding: 10px;
+  color: #fff;
+}
+
+.movie-card:hover {
+  transform: scale(1.05);
+}
+
+/* Poster image */
+.movie-card img {
+  width: 100%;
+  height: 225px; /* Adjust poster height here */
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+/* Title */
+.movie-card h3 {
+  font-size: 1rem;
+  margin-top: 8px;
+}
