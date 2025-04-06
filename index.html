@@ -11,16 +11,17 @@
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
+  <!-- Header -->
   <header>
     <div class="logo-container">
-      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo"></a>
+      <a href="index.html"><img src="logo.png" alt="MoviesVault.HQ Logo" class="logo" draggable="false" oncontextmenu="return false;"></a>
     </div>
     <div class="search-bar">
       <input type="text" id="searchInput" placeholder="Search movies...">
-      <button id="searchBtn">Search</button>
     </div>
   </header>
 
+  <!-- Categories -->
   <div class="categories">
     <button class="category-btn active" data-category="all">All</button>
     <button class="category-btn" data-category="hollywood">Hollywood</button>
@@ -34,15 +35,14 @@
     <strong>Notice:</strong> We update daily! Join our <a href="https://t.me/movievaulthq" target="_blank">Telegram Channel</a> for instant updates.
   </div>
 
-  <!-- Movie List -->
-  <section id="movie-list">
-    <!-- Movies will be loaded here dynamically -->
+  <!-- Movie Grid -->
+  <section id="movie-container">
+    <!-- Movies will be dynamically inserted here -->
   </section>
 
   <!-- Pagination -->
-  <div class="pagination">
-    <button id="prevPage">Previous</button>
-    <button id="nextPage">Next</button>
+  <div id="pagination" class="pagination">
+    <!-- Page buttons will be injected here -->
   </div>
 
   <!-- Footer -->
@@ -56,8 +56,10 @@
       <a href="request-removal.html">Request Removal</a>
     </nav>
   </footer>
-<!-- Load Supabase before your app.js -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
+
