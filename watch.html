@@ -82,22 +82,22 @@
   </style>
 
   <script>
-    // Asset Protection
+    // 🛡️ Asset Protection
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.onkeydown = function (e) {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) {
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74))) {
         return false;
       }
     };
 
-    // Session Timer (10 hours limit)
+    // 🕓 Session Control (10 hours)
     window.onload = function () {
-      const firstVisit = localStorage.getItem('visit_time');
-      if (!firstVisit) {
+      const visitTime = localStorage.getItem('visit_time');
+      if (!visitTime) {
         localStorage.setItem('visit_time', Date.now());
       } else {
         const now = Date.now();
-        if (now - parseInt(firstVisit) > 36000000) {
+        if (now - parseInt(visitTime) > 36000000) {
           localStorage.removeItem('visit_time');
           alert("Session expired. Please refresh or visit again.");
           window.location.href = '/';
@@ -105,52 +105,74 @@
         }
       }
 
-      // Get ?movie=MovieName from URL
       const urlParams = new URLSearchParams(window.location.search);
-      const movie = urlParams.get('movie');
+      const movieName = urlParams.get('movie');
 
-      if (movie) {
+      if (movieName) {
         fetch(`https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2`)
           .then(res => res.json())
           .then(data => {
-            const match = data.find(row => row["Movie name"]?.toLowerCase().trim() === movie.toLowerCase().trim());
-            if (match) {
-              document.getElementById('movieTitle').innerText = match["Movie name"];
+            const movie = data.find(row =>
+              row["Movie name"]?.trim().toLowerCase() === movieName.trim().toLowerCase()
+            );
+
+            if (movie) {
+              document.getElementById('movieTitle').innerText = movie["Movie name"];
               document.getElementById('sheetName').innerText = "From Sheet2";
-              loadPlayer(match["Server 1"], match["Server 2"]);
+
+              const server1 = movie["Server 1"]?.trim();
+              const server2 = movie["Server 2"]?.trim();
+
+              if (server1 || server2) {
+                loadPlayer(server1, server2);
+              } else {
+                showError("Streaming links not available.");
+              }
             } else {
-              showError();
+              showError("Movie not found.");
             }
           })
           .catch(err => {
-            console.error(err);
-            showError();
+            console.error("Error fetching movie:", err);
+            showError("Failed to load movie.");
           });
       } else {
-        showError();
+        showError("No movie specified.");
       }
     };
 
-    function showError() {
+    function showError(msg) {
       document.getElementById('movieTitle').innerText = "Movie Not Found";
-      document.querySelector('.player-container').innerHTML = "<p style='text-align:center; padding: 40px;'>Movie not available.</p>";
+      document.querySelector('.player-container').innerHTML = `<p style="text-align:center; padding: 40px; color: red;">${msg}</p>`;
       document.querySelector('.server-buttons').style.display = "none";
     }
 
     function loadPlayer(server1, server2) {
-      const p1 = document.getElementById('player1');
-      const p2 = document.getElementById('player2');
+      const player1 = document.getElementById('player1');
+      const player2 = document.getElementById('player2');
 
-      p1.src = server1;
-      p2.src = server2;
+      if (server1) {
+        player1.src = server1;
+        player1.style.display = "block";
+      }
 
-      p1.style.display = "block"; // Show default
+      if (server2) {
+        player2.src = server2;
+      }
+
+      if (!server1 && !server2) {
+        showError("No playable sources found.");
+      }
     }
 
     function switchServer(playerId) {
       document.getElementById('player1').style.display = 'none';
       document.getElementById('player2').style.display = 'none';
-      document.getElementById(playerId).style.display = 'block';
+
+      const targetPlayer = document.getElementById(playerId);
+      if (targetPlayer && targetPlayer.src) {
+        targetPlayer.style.display = 'block';
+      }
     }
   </script>
 </head>
@@ -164,8 +186,8 @@
   <div class="sheet-name" id="sheetName"></div>
 
   <div class="player-container">
-    <iframe id="player1" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>
-    <iframe id="player2" allowfullscreen allowtransparency allow="autoplay" scrolling="no" frameborder="0"></iframe>
+    <iframe id="player1" allowfullscreen allow="autoplay" scrolling="no" frameborder="0"></iframe>
+    <iframe id="player2" allowfullscreen allow="autoplay" scrolling="no" frameborder="0"></iframe>
   </div>
 
   <div class="server-buttons">
@@ -178,3 +200,4 @@
   </footer>
 </body>
 </html>
+
