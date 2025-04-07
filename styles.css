@@ -110,7 +110,7 @@ header {
   background-color: var(--primary);
 }
 
-/* Updated Movie Card Styles - Removed Underlines */
+/* Movie Card Styles */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 8px;
@@ -170,31 +170,49 @@ header {
   padding: 1.2rem;
 }
 
-/* Mobile Optimizations */
+/* Mobile Optimizations - Updated to match reference image */
 @media (max-width: 768px) {
   #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
     padding: 1rem;
   }
   
+  .movie-card {
+    background-color: var(--secondary);
+    border-radius: 0;
+    border: none;
+  }
+  
   .movie-card img {
     height: 220px;
+    border-radius: 0;
+    border-bottom: 2px solid var(--primary);
+  }
+  
+  .movie-info {
+    padding: 0.8rem 0.5rem;
+  }
+  
+  .movie-card h3 {
+    font-size: 0.95rem;
+    text-align: left;
+    font-weight: 500;
+  }
+  
+  .movie-card p {
+    text-align: left;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
   
   .movie-card img {
-    height: 190px;
-  }
-  
-  .movie-info {
-    padding: 0.5rem 0.4rem;
+    height: 200px;
   }
 }
 
@@ -385,11 +403,9 @@ footer {
   .logo {
     max-height: 60px;
   }
+}
 
-  .movie-card img {
-    height: 200px;
-  }
-}/* Added Back Button Style - Only for movie.html */
+/* Added Back Button Style - Only for movie.html */
 .back-btn {
   display: inline-block;
   padding: 0.5rem 1rem;
