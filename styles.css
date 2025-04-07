@@ -110,68 +110,86 @@ header {
   background-color: var(--primary);
 }
 
-/* Movie List - Updated while keeping original grid pattern */
-#movie-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 1rem;
-  padding: 1rem;
-}
-
-
-/* Updated Movie Card Styles - Only changed these sections */
+/* Movie Card Styles - Optimized for all devices */
 .movie-card {
   background-color: var(--light-dark);
-  border-radius: 2px;
+  border-radius: 8px; /* Increased from 2px for smoother look */
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
+  transition: all 0.3s ease; /* Smoother transition */
   cursor: pointer;
   border: 1px solid var(--secondary);
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 .movie-card img {
   width: 100%;
-  height: 225px;
+  height: 260px; /* Increased from 250px */
   object-fit: cover;
+  object-position: center top; /* Better focus on poster content */
+}
+
+.movie-info {
+  padding: 0.6rem 0.5rem; /* Slightly more vertical padding */
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem; /* Space between elements */
 }
 
 .movie-card h3 {
-  padding: 0.5rem;
   font-size: 1rem;
-  text-align: center;
+  margin: 0; /* Remove default margins */
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3; /* Better text spacing */
 }
 
 .movie-card p {
-  padding: 0 0.5rem 0.5rem;
-  font-size: 0.9rem;
-  text-align: center;
+  font-size: 0.85rem; /* Slightly smaller */
   color: var(--text-secondary);
+  margin-top: auto;
+  opacity: 0.9; /* Slightly faded for less prominence */
 }
 
-.movie-card a {
-  display: block;
-  padding: 0.5rem;
-  background-color: var(--secondary);
-  color: var(--text);
-  text-align: center;
-  text-decoration: none;
-  font-weight: bold;
-  border-top: 1px solid var(--dark);
+/* Grid container - Enhanced for responsiveness */
+#movie-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); /* Slightly wider */
+  gap: 1.3rem; /* Increased from 1.2rem */
+  padding: 1.2rem; /* More breathing room */
 }
 
-.movie-card a:hover {
-  background-color: var(--dark);
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  #movie-container {
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .movie-card img {
+    height: 220px; /* Slightly smaller for mobile */
+  }
 }
 
+@media (max-width: 480px) {
+  #movie-container {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .movie-card img {
+    height: 190px;
+  }
+  
+  .movie-info {
+    padding: 0.5rem 0.4rem;
+  }
+}
 /* Pagination */
 .pagination {
   display: flex;
