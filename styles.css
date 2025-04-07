@@ -154,7 +154,7 @@ color: var(--text-secondary);
 .movie-card a {
 display: block;
 padding: 0.5rem;
-background-color: var(--light-dark);
+background-color: var(--primary);
 color: var(--light-dark);
 text-align: center;
 text-decoration: none;
@@ -401,3 +401,4 @@ flex-direction: column;
 width: 100%;
 }
 } 
+
