@@ -110,12 +110,12 @@ header {
   background-color: var(--primary);
 }
 
-/* Movie Card Styles - Optimized for all devices */
+/* Updated Movie Card Styles - Removed Underlines */
 .movie-card {
   background-color: var(--light-dark);
-  border-radius: 8px; /* Increased from 2px for smoother look */
+  border-radius: 8px;
   overflow: hidden;
-  transition: all 0.3s ease; /* Smoother transition */
+  transition: all 0.3s ease;
   cursor: pointer;
   border: 1px solid var(--secondary);
   height: 100%;
@@ -125,42 +125,49 @@ header {
 
 .movie-card img {
   width: 100%;
-  height: 260px; /* Increased from 250px */
+  height: 260px;
   object-fit: cover;
-  object-position: center top; /* Better focus on poster content */
+  object-position: center top;
 }
 
 .movie-info {
-  padding: 0.6rem 0.5rem; /* Slightly more vertical padding */
+  padding: 0.6rem 0.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.3rem; /* Space between elements */
+  gap: 0.3rem;
 }
 
 .movie-card h3 {
   font-size: 1rem;
-  margin: 0; /* Remove default margins */
+  margin: 0;
   color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  line-height: 1.3; /* Better text spacing */
+  line-height: 1.3;
+  text-decoration: none !important;
 }
 
 .movie-card p {
-  font-size: 0.85rem; /* Slightly smaller */
+  font-size: 0.85rem;
   color: var(--text-secondary);
   margin-top: auto;
-  opacity: 0.9; /* Slightly faded for less prominence */
+  opacity: 0.9;
+  text-decoration: none !important;
 }
 
-/* Grid container - Enhanced for responsiveness */
+.movie-card a {
+  text-decoration: none !important;
+  color: inherit;
+}
+
+/* Grid container */
 #movie-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); /* Slightly wider */
-  gap: 1.3rem; /* Increased from 1.2rem */
-  padding: 1.2rem; /* More breathing room */
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 1.3rem;
+  padding: 1.2rem;
 }
 
 /* Mobile Optimizations */
@@ -172,7 +179,7 @@ header {
   }
   
   .movie-card img {
-    height: 220px; /* Slightly smaller for mobile */
+    height: 220px;
   }
 }
 
@@ -190,6 +197,7 @@ header {
     padding: 0.5rem 0.4rem;
   }
 }
+
 /* Pagination */
 .pagination {
   display: flex;
@@ -379,6 +387,30 @@ footer {
   }
 
   .movie-card img {
-    height: 200px; /* Slightly reduced height on mobile */
+    height: 200px;
+  }
+}/* Added Back Button Style - Only for movie.html */
+.back-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
+}
+
+.back-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .back-btn {
+    margin: 0.5rem auto;
+    display: block;
+    width: fit-content;
   }
 }
