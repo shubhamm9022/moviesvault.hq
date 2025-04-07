@@ -102,7 +102,7 @@
         }
       }
 
-      // Get query param (movie)
+      // Get movie from URL query
       const urlParams = new URLSearchParams(window.location.search);
       const movie = urlParams.get('movie');
 
@@ -110,16 +110,28 @@
         fetch(`https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2`)
           .then(res => res.json())
           .then(data => {
-            const match = data.find(row => row["Movie name"].toLowerCase() === movie.toLowerCase());
+            const match = data.find(row =>
+              row["Movie name"]?.trim().toLowerCase() === movie.trim().toLowerCase()
+            );
+
             if (match) {
               document.getElementById('movieTitle').innerText = match["Movie name"];
               document.getElementById('sheetName').innerText = "Sheet: Sheet2";
               loadPlayer(match["Server 1"], match["Server 2"]);
+              switchServer('player1'); // Show Server 1 by default
             } else {
               document.getElementById('movieTitle').innerText = "Movie Not Found";
               document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>Movie not available.</p>";
             }
+          })
+          .catch(error => {
+            console.error("Fetch error:", error);
+            document.getElementById('movieTitle').innerText = "Error loading movie.";
+            document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>Something went wrong. Try again later.</p>";
           });
+      } else {
+        document.getElementById('movieTitle').innerText = "No Movie Selected";
+        document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>No movie was specified.</p>";
       }
     };
 
