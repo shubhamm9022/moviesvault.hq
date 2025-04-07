@@ -110,14 +110,16 @@ header {
   background-color: var(--primary);
 }
 
-/* Movie List */
-#movie-list {
+/* Movie List - Updated while keeping original grid pattern */
+#movie-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 1rem;
   padding: 1rem;
 }
 
+
+/* Updated Movie Card Styles - Only changed these sections */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 2px;
@@ -134,13 +136,18 @@ header {
 
 .movie-card img {
   width: 100%;
-  height: auto;
+  height: 225px;
+  object-fit: cover;
 }
 
 .movie-card h3 {
   padding: 0.5rem;
   font-size: 1rem;
   text-align: center;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .movie-card p {
@@ -153,15 +160,16 @@ header {
 .movie-card a {
   display: block;
   padding: 0.5rem;
-  background-color: var(--primary);
-  color: var(--light-dark);
+  background-color: var(--secondary);
+  color: var(--text);
   text-align: center;
   text-decoration: none;
   font-weight: bold;
+  border-top: 1px solid var(--dark);
 }
 
 .movie-card a:hover {
-  background-color: #28a745;
+  background-color: var(--dark);
 }
 
 /* Pagination */
@@ -213,76 +221,6 @@ footer {
   color: var(--primary);
 }
 
-/* Responsive Design */
-@media (min-width: 768px) {
-  header {
-    flex-direction: row;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .logo-container {
-    justify-content: flex-start;
-  }
-
-  .search-bar {
-    margin: 0;
-  }
-}
-
-@media (max-width: 480px) {
-  .logo {
-    max-height: 60px;
-  }
-
-  #movie-list {
-    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  }
-
-  .movie-card h3 {
-    font-size: 0.9rem;
-  }
-
-  .movie-card p {
-    font-size: 0.8rem;
-  }
-}
-/* Grid container */
-#movie-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); /* 150px poster width */
-  gap: 10px;
-  padding: 10px;
-}
-
-/* Individual card */
-.movie-card {
-  background: #111;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  text-align: center;
-  padding: 10px;
-  color: #fff;
-}
-
-.movie-card:hover {
-  transform: scale(1.05);
-}
-
-/* Poster image */
-.movie-card img {
-  width: 100%;
-  height: 225px; /* Adjust poster height here */
-  object-fit: cover;
-  border-radius: 8px;
-}
-
-/* Title */
-.movie-card h3 {
-  font-size: 1rem;
-  margin-top: 8px;
-}
 /* Movie Details Page Styles */
 .movie-details-container {
   max-width: 1200px;
@@ -365,8 +303,23 @@ footer {
   transform: translateY(-2px);
 }
 
-/* Responsive styles for movie page */
+/* Responsive Design */
 @media (min-width: 768px) {
+  header {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo-container {
+    justify-content: flex-start;
+  }
+
+  .search-bar {
+    margin: 0;
+  }
+
+  /* Movie details page responsive */
   .movie-wrapper {
     flex-direction: row;
   }
@@ -392,11 +345,22 @@ footer {
 }
 
 @media (max-width: 767px) {
+  /* Movie details page responsive */
   .action-buttons {
     flex-direction: column;
   }
   
   .stream-btn, .download-btn {
     width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo {
+    max-height: 60px;
+  }
+
+  .movie-card img {
+    height: 200px; /* Slightly reduced height on mobile */
   }
 }
