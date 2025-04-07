@@ -46,9 +46,21 @@
       border-color: #4caf50;
     }
 
-    iframe {
+    .responsive-player {
+      position: relative;
+      padding-top: 56.25%; /* 16:9 aspect ratio */
+      height: 0;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    .responsive-player iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
       width: 100%;
-      height: 500px;
+      height: 100%;
       border: none;
       background: black;
     }
@@ -66,7 +78,7 @@
       margin-top: 30px;
     }
 
-    /* Disable right click & drag */
+    /* Disable right click, text selection, image dragging */
     body, img, iframe {
       -webkit-user-select: none;
       -moz-user-select: none;
@@ -95,7 +107,9 @@
       <button id="server1-btn">Server 1</button>
       <button id="server2-btn">Server 2</button>
     </div>
-    <iframe id="movie-player" src="" allowfullscreen></iframe>
+    <div class="responsive-player">
+      <iframe id="movie-player" src="" allowfullscreen allowtransparency allow="autoplay" scrolling="no"></iframe>
+    </div>
   </div>
 
   <div class="not-found" id="not-found" style="display: none;">Movie not found.</div>
