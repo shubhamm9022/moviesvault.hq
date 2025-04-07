@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Watch Movie</title>
   <style>
     body {
@@ -23,13 +23,13 @@
     .movie-title {
       text-align: center;
       font-size: 1.8rem;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     .sheet-name {
       text-align: center;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       color: #888;
-      margin-bottom: 10px;
+      margin-bottom: 20px;
     }
     .player-container {
       width: 100%;
@@ -45,8 +45,6 @@
       position: absolute;
       top: 0;
       left: 0;
-    }
-    #player2 {
       display: none;
     }
     .server-buttons {
@@ -82,14 +80,17 @@
       text-decoration: underline;
     }
   </style>
+
   <script>
     // Asset Protection
-    document.addEventListener('contextmenu', event => event.preventDefault());
-    document.onkeydown = function(e) {
-      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) return false;
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.onkeydown = function (e) {
+      if (e.keyCode == 123 || (e.ctrlKey && e.shiftKey && (e.keyCode == 73 || e.keyCode == 74))) {
+        return false;
+      }
     };
 
-    // Session Timer (10 hours)
+    // Session Timer (10 hours limit)
     window.onload = function () {
       const firstVisit = localStorage.getItem('visit_time');
       if (!firstVisit) {
@@ -98,11 +99,13 @@
         const now = Date.now();
         if (now - parseInt(firstVisit) > 36000000) {
           localStorage.removeItem('visit_time');
+          alert("Session expired. Please refresh or visit again.");
           window.location.href = '/';
+          return;
         }
       }
 
-      // Get movie from URL query
+      // Get ?movie=MovieName from URL
       const urlParams = new URLSearchParams(window.location.search);
       const movie = urlParams.get('movie');
 
@@ -110,34 +113,38 @@
         fetch(`https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2`)
           .then(res => res.json())
           .then(data => {
-            const match = data.find(row =>
-              row["Movie name"]?.trim().toLowerCase() === movie.trim().toLowerCase()
-            );
-
+            const match = data.find(row => row["Movie name"]?.toLowerCase().trim() === movie.toLowerCase().trim());
             if (match) {
               document.getElementById('movieTitle').innerText = match["Movie name"];
-              document.getElementById('sheetName').innerText = "Sheet: Sheet2";
+              document.getElementById('sheetName').innerText = "From Sheet2";
               loadPlayer(match["Server 1"], match["Server 2"]);
-              switchServer('player1'); // Show Server 1 by default
             } else {
-              document.getElementById('movieTitle').innerText = "Movie Not Found";
-              document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>Movie not available.</p>";
+              showError();
             }
           })
-          .catch(error => {
-            console.error("Fetch error:", error);
-            document.getElementById('movieTitle').innerText = "Error loading movie.";
-            document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>Something went wrong. Try again later.</p>";
+          .catch(err => {
+            console.error(err);
+            showError();
           });
       } else {
-        document.getElementById('movieTitle').innerText = "No Movie Selected";
-        document.querySelector('.player-container').innerHTML = "<p style='text-align:center'>No movie was specified.</p>";
+        showError();
       }
     };
 
+    function showError() {
+      document.getElementById('movieTitle').innerText = "Movie Not Found";
+      document.querySelector('.player-container').innerHTML = "<p style='text-align:center; padding: 40px;'>Movie not available.</p>";
+      document.querySelector('.server-buttons').style.display = "none";
+    }
+
     function loadPlayer(server1, server2) {
-      document.getElementById('player1').src = server1;
-      document.getElementById('player2').src = server2;
+      const p1 = document.getElementById('player1');
+      const p2 = document.getElementById('player2');
+
+      p1.src = server1;
+      p2.src = server2;
+
+      p1.style.display = "block"; // Show default
     }
 
     function switchServer(playerId) {
@@ -147,6 +154,7 @@
     }
   </script>
 </head>
+
 <body>
   <header>
     <img src="/assets/logo.png" alt="Logo" />
