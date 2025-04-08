@@ -3,67 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <title>Movie Stream</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
+      font-family: 'Poppins', sans-serif;
       background-color: #0d0d0d;
-      color: #ffffff;
+      color: #fff;
       display: flex;
       flex-direction: column;
       align-items: center;
+      justify-content: center;
+      min-height: 100vh;
       padding: 20px 10px;
     }
 
-    header {
-      margin-bottom: 20px;
+    #preloader {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .loader {
+      border: 5px solid #1a1a1a;
+      border-top: 5px solid #4fa3ff;
+      border-radius: 50%;
+      width: 50px;
+      height: 50px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     #logo {
       max-width: 280px;
       width: 100%;
-      height: auto;
-      display: block;
-      margin: 0 auto;
+      margin-bottom: 20px;
     }
 
     .player-wrapper {
       background-color: #1a1a1a;
-      border: 1px solid #2a2a2a;
+      border: 1px solid #333;
       border-radius: 12px;
       padding: 20px;
       width: 100%;
       max-width: 960px;
-      box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+      box-shadow: 0 0 12px rgba(0,0,0,0.7);
       box-sizing: border-box;
     }
 
     h1 {
-      font-size: 1.5rem;
-      margin-bottom: 15px;
+      font-size: 1.3rem;
       text-align: center;
+      margin-bottom: 15px;
     }
 
     #player-container {
-      position: relative;
       width: 100%;
       aspect-ratio: 16 / 9;
-      overflow: hidden;
       border-radius: 8px;
+      overflow: hidden;
     }
 
     iframe {
       width: 100%;
       height: 100%;
       border: none;
-      display: block;
     }
 
     footer {
-      margin-top: 30px;
-      text-align: center;
+      margin-top: 20px;
       font-size: 0.9rem;
-      color: #ccc;
+      color: #aaa;
+      text-align: center;
     }
 
     footer a {
@@ -74,22 +93,16 @@
     footer a:hover {
       text-decoration: underline;
     }
-
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 1.2rem;
-      }
-      .player-wrapper {
-        padding: 15px;
-      }
-    }
   </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false">
 
-  <header>
-    <img id="logo" src="logo.png" alt="Movies Vault Logo">
-  </header>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="loader"></div>
+  </div>
+
+  <img id="logo" src="logo.png" alt="Movies Vault Logo">
 
   <div class="player-wrapper">
     <h1 id="movie-name">Loading...</h1>
@@ -109,14 +122,15 @@
     const accessKey = urlParams.get('key');
     const validKey = 'MVACCESS2025';
 
+    // Access check
     if (accessKey !== validKey) {
       document.body.innerHTML = "<h2 style='text-align:center;'>Access Denied</h2>";
       throw new Error("Invalid key");
     }
 
+    // Session time limit
     const now = Date.now();
     const sessionStart = sessionStorage.getItem('mv_session_start');
-
     if (!sessionStart) {
       sessionStorage.setItem('mv_session_start', now);
     } else {
@@ -127,27 +141,33 @@
       }
     }
 
+    // Load movie from Sheet
     const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
 
     fetch(sheetURL)
       .then(res => res.json())
       .then(data => {
         const movie = data.find(m => m["Movieslug"] === movieSlug);
+        const name = document.getElementById("movie-name");
+        const iframe = document.getElementById("movie-frame");
+
         if (!movie) {
-          document.getElementById("movie-name").textContent = "Movie not found";
+          name.textContent = "Movie not found";
           return;
         }
 
-        document.getElementById("movie-name").textContent = movie["Movie name"];
+        name.textContent = movie["Movie name"];
         const link = movie["Server 1"];
-        const iframe = document.getElementById("movie-frame");
+        iframe.src = link ? link.replace("/file/", "/embed/").replace("/e/", "/embed/") : "";
 
-        if (!link) {
-          iframe.srcdoc = "<p style='color:white;text-align:center;'>Link not available</p>";
-        } else {
-          iframe.src = link.replace("/file/", "/embed/").replace("/e/", "/embed/");
-        }
+        // Hide loader
+        document.getElementById("preloader").style.display = "none";
+      })
+      .catch(err => {
+        document.getElementById("movie-name").textContent = "Error loading movie.";
+        document.getElementById("preloader").style.display = "none";
       });
   </script>
+
 </body>
 </html>
