@@ -5,14 +5,14 @@
   <title>Movie Stream</title>
   <style>
     body {
-      background: #0f0f0f;
-      color: #fff;
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
-      padding: 1rem;
-      text-align: center;
-      -webkit-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+      background-color: #0d0d0d;
+      color: #ffffff;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 10px;
     }
 
     header {
@@ -20,20 +20,36 @@
     }
 
     #logo {
-      max-width: 200px;
+      max-width: 280px;
+      width: 100%;
       height: auto;
+      display: block;
       margin: 0 auto;
     }
 
-    #player-container {
-      margin: 20px auto;
-      width: 100%;
-      max-width: 900px;
-      aspect-ratio: 16 / 9;
-      position: relative;
-      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    .player-wrapper {
+      background-color: #1a1a1a;
+      border: 1px solid #2a2a2a;
       border-radius: 12px;
+      padding: 20px;
+      width: 100%;
+      max-width: 960px;
+      box-shadow: 0 0 12px rgba(0, 0, 0, 0.7);
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    #player-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 16 / 9;
       overflow: hidden;
+      border-radius: 8px;
     }
 
     iframe {
@@ -43,10 +59,28 @@
       display: block;
     }
 
+    footer {
+      margin-top: 30px;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #ccc;
+    }
+
+    footer a {
+      color: #4fa3ff;
+      text-decoration: none;
+    }
+
+    footer a:hover {
+      text-decoration: underline;
+    }
+
     @media (max-width: 768px) {
-      #player-container {
-        max-width: 100%;
-        border-radius: 0;
+      h1 {
+        font-size: 1.2rem;
+      }
+      .player-wrapper {
+        padding: 15px;
       }
     }
   </style>
@@ -57,11 +91,17 @@
     <img id="logo" src="logo.png" alt="Movies Vault Logo">
   </header>
 
-  <h1 id="movie-name">Loading...</h1>
-
-  <div id="player-container">
-    <iframe id="movie-frame" allowfullscreen></iframe>
+  <div class="player-wrapper">
+    <h1 id="movie-name">Loading...</h1>
+    <div id="player-container">
+      <iframe id="movie-frame" allowfullscreen></iframe>
+    </div>
   </div>
+
+  <footer>
+    <p>&copy; 2025 MoviesVault. All rights reserved.</p>
+    <p><a href="/request.html">Request Movie</a> | <a href="/dmca.html">DMCA Removal</a></p>
+  </footer>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
@@ -70,21 +110,19 @@
     const validKey = 'MVACCESS2025';
 
     if (accessKey !== validKey) {
-      document.body.innerHTML = "<h2>Access Denied</h2>";
+      document.body.innerHTML = "<h2 style='text-align:center;'>Access Denied</h2>";
       throw new Error("Invalid key");
     }
 
-    // 10-hour session limit
     const now = Date.now();
-    const storedStart = sessionStorage.getItem('mv_session_start');
+    const sessionStart = sessionStorage.getItem('mv_session_start');
 
-    if (!storedStart) {
+    if (!sessionStart) {
       sessionStorage.setItem('mv_session_start', now);
     } else {
-      const diff = now - parseInt(storedStart);
-      const maxTime = 10 * 60 * 60 * 1000;
-      if (diff > maxTime) {
-        document.body.innerHTML = "<h2>Session expired. Access limited to 10 hours.</h2>";
+      const maxDuration = 10 * 60 * 60 * 1000;
+      if (now - parseInt(sessionStart) > maxDuration) {
+        document.body.innerHTML = "<h2 style='text-align:center;'>Session expired. Access limited to 10 hours.</h2>";
         throw new Error("Session expired");
       }
     }
@@ -101,17 +139,15 @@
         }
 
         document.getElementById("movie-name").textContent = movie["Movie name"];
-        const mainLink = movie["Server 1"];
+        const link = movie["Server 1"];
         const iframe = document.getElementById("movie-frame");
 
-        if (!mainLink) {
-          iframe.srcdoc = "<p>Link not available</p>";
-          return;
+        if (!link) {
+          iframe.srcdoc = "<p style='color:white;text-align:center;'>Link not available</p>";
+        } else {
+          iframe.src = link.replace("/file/", "/embed/").replace("/e/", "/embed/");
         }
-
-        iframe.src = mainLink.replace("/file/", "/embed/").replace("/e/", "/embed/");
       });
   </script>
-
 </body>
 </html>
