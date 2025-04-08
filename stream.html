@@ -1,110 +1,150 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
   <title>Movie Stream</title>
   <style>
     body {
-      background-color: #121212;
-      color: white;
-      font-family: Arial, sans-serif;
+      background: #0f0f0f;
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 1rem;
       text-align: center;
-      padding: 20px;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
-    .logo {
-      font-size: 24px;
-      font-weight: bold;
-      margin-bottom: 10px;
-    }
-    .movie-title {
-      font-size: 22px;
+
+    header {
       margin-bottom: 20px;
     }
-    .btn-group {
-      margin-bottom: 20px;
+
+    #logo {
+      max-width: 200px;
+      height: auto;
+      margin: 0 auto;
     }
-    .btn {
-      padding: 10px 20px;
-      margin: 5px;
-      background-color: #ff3838;
-      color: white;
-      border: none;
-      cursor: pointer;
-      border-radius: 5px;
+
+    #player-container {
+      margin: 20px auto;
+      max-width: 100%;
     }
-    .btn:hover {
-      background-color: #ff5e5e;
-    }
+
     iframe {
       width: 100%;
-      height: 500px;
+      max-width: 800px;
       border: none;
-      border-radius: 10px;
+      display: block;
+      margin: 0 auto;
     }
-    .footer {
-      margin-top: 40px;
-      font-size: 14px;
-      color: #999;
+
+    #buttons {
+      margin: 1rem 0;
+    }
+
+    .server-btn {
+      padding: 10px 20px;
+      background: #222;
+      color: #fff;
+      border: none;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: background 0.3s ease;
+    }
+
+    .server-btn:hover {
+      background: #444;
     }
   </style>
 </head>
-<body>
-  <div class="logo">MoviesVault</div>
-  <div class="movie-title" id="movieName">Loading...</div>
+<body oncontextmenu="return false" ondragstart="return false">
 
-  <div class="btn-group" id="serverButtons" style="display: none;">
-    <button class="btn" onclick="switchServer(1)">Server 1</button>
-    <button class="btn" onclick="switchServer(2)">Server 2</button>
+  <header>
+    <img id="logo" src="logo.png" alt="Movies Vault Logo">
+  </header>
+
+  <h1 id="movie-name">Loading...</h1>
+
+  <div id="buttons">
+    <button class="server-btn" onclick="switchServer('server1')">Server 1</button>
+    <button class="server-btn" onclick="switchServer('server2')">Server 2</button>
   </div>
 
-  <div id="playerContainer">
-    <iframe id="playerFrame" src="" allowfullscreen></iframe>
-  </div>
-
-  <div class="footer">
-    <a href="/request.html" style="color:#999">Request Removal</a> | &copy; 2025 MoviesVault
+  <div id="player-container">
+    <iframe id="movie-frame" allowfullscreen></iframe>
   </div>
 
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const movieSlug = (params.get("movie") || "").trim().toLowerCase();
-    const accessKey = params.get("key");
+    const urlParams = new URLSearchParams(window.location.search);
+    const movieSlug = urlParams.get('movie');
+    const accessKey = urlParams.get('key');
+    const validKey = 'MVACCESS2025';
 
-    if (accessKey !== "MVACCESS2025") {
+    if (accessKey !== validKey) {
       document.body.innerHTML = "<h2>Access Denied</h2>";
-    } else {
-      fetch("https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2")
-        .then(res => res.json())
-        .then(data => {
-          const movie = data.find(
-            m => m.Movieslug && m.Movieslug.trim().toLowerCase() === movieSlug
-          );
-
-          if (movie) {
-            document.getElementById("movieName").textContent = movie["Movie name"];
-            document.getElementById("serverButtons").style.display = "block";
-
-            const server1 = movie["Server 1"];
-            const server2 = movie["Server 2"];
-
-            window.currentLinks = { server1, server2 };
-            document.getElementById("playerFrame").src = server1 || server2 || "";
-          } else {
-            document.getElementById("movieName").textContent = "Movie not found.";
-            document.getElementById("playerContainer").style.display = "none";
-          }
-        })
-        .catch(err => {
-          document.getElementById("movieName").textContent = "Error loading movie.";
-          console.error(err);
-        });
+      throw new Error("Invalid key");
     }
+
+    // 10-hour session limit
+    const now = Date.now();
+    const storedStart = sessionStorage.getItem('mv_session_start');
+
+    if (!storedStart) {
+      sessionStorage.setItem('mv_session_start', now);
+    } else {
+      const diff = now - parseInt(storedStart);
+      const maxTime = 10 * 60 * 60 * 1000; // 10 hours in ms
+      if (diff > maxTime) {
+        document.body.innerHTML = "<h2>Session expired. Access limited to 10 hours.</h2>";
+        throw new Error("Session expired");
+      }
+    }
+
+    const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
+    let currentData = {};
+
+    fetch(sheetURL)
+      .then(res => res.json())
+      .then(data => {
+        const movie = data.find(m => m["Movieslug"] === movieSlug);
+        if (!movie) {
+          document.getElementById("movie-name").textContent = "Movie not found";
+          return;
+        }
+
+        document.getElementById("movie-name").textContent = movie["Movie name"];
+        currentData = {
+          server1: movie["Server 1"],
+          server2: movie["Server 2"]
+        };
+
+        switchServer('server1');
+      });
 
     function switchServer(server) {
-      const src = server === 1 ? window.currentLinks.server1 : window.currentLinks.server2;
-      document.getElementById("playerFrame").src = src || "";
+      const iframe = document.getElementById("movie-frame");
+      const link = currentData[server];
+
+      if (!link) {
+        iframe.srcdoc = "<p>Link not available</p>";
+        return;
+      }
+
+      if (link.includes("smoothpre.com")) {
+        iframe.width = "640";
+        iframe.height = "360";
+      } else if (link.includes("streamtape.com")) {
+        iframe.width = "800";
+        iframe.height = "600";
+      } else {
+        iframe.width = "100%";
+        iframe.height = "500";
+      }
+
+      iframe.src = link.replace("/file/", "/embed/").replace("/e/", "/embed/");
     }
   </script>
+
 </body>
 </html>
