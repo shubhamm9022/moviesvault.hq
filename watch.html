@@ -1,170 +1,143 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Watch Movie - MoviesVault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Stream | MoviesVault</title>
   <style>
     body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
       background-color: #0d0d0d;
       color: white;
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
     }
-
-    .logo {
-      margin: 20px auto;
-      max-width: 180px;
-    }
-
-    .player-container {
-      margin: 20px auto;
-      width: 90%;
-      max-width: 900px;
-      position: relative;
-    }
-
-    .server-buttons {
+    header {
+      font-size: 2rem;
+      font-weight: bold;
       margin-bottom: 10px;
     }
-
-    .server-buttons button {
-      padding: 10px 20px;
-      margin: 0 5px;
-      font-weight: bold;
-      background-color: #1c1c1c;
-      border: 1px solid #333;
-      color: #fff;
-      cursor: pointer;
-      border-radius: 5px;
+    h2 {
+      margin: 10px 0;
+      font-size: 1.5rem;
     }
-
-    .server-buttons button.active {
-      background-color: #4caf50;
-      border-color: #4caf50;
-    }
-
-    .responsive-player {
-      position: relative;
-      padding-top: 56.25%; /* 16:9 aspect ratio */
-      height: 0;
-      overflow: hidden;
+    #player-container {
+      width: 100%;
+      max-width: 800px;
+      height: 600px;
+      margin: 20px 0;
+      background-color: #111;
       border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.7);
+      overflow: hidden;
+      transition: opacity 0.3s ease;
     }
-
-    .responsive-player iframe {
-      position: absolute;
-      top: 0;
-      left: 0;
+    iframe {
       width: 100%;
       height: 100%;
       border: none;
-      background: black;
     }
-
-    .footer {
-      margin-top: 40px;
-      padding: 20px;
-      font-size: 14px;
-      background: #111;
+    .server-buttons {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 30px;
     }
-
-    .not-found {
-      color: red;
-      font-size: 20px;
-      margin-top: 30px;
+    .server-buttons button {
+      padding: 10px 20px;
+      background: #1f1f1f;
+      border: none;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background 0.3s;
     }
-
-    /* Disable right click, text selection, image dragging */
-    body, img, iframe {
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      user-select: none;
-      -webkit-touch-callout: none;
-      -webkit-user-drag: none;
+    .server-buttons button:hover {
+      background: #333;
     }
-
-    body {
-      -webkit-touch-callout: none;
-      -webkit-user-drag: none;
-      -webkit-user-select: none;
-      -moz-user-select: none;
-      -ms-user-select: none;
-      user-select: none;
+    footer {
+      margin-top: 50px;
+      text-align: center;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    @media(max-width: 768px) {
+      #player-container {
+        height: 360px;
+      }
+      header {
+        font-size: 1.5rem;
+      }
+      h2 {
+        font-size: 1.2rem;
+      }
     }
   </style>
-</head>
-<body oncontextmenu="return false">
-  <img src="logo.png" alt="Logo" class="logo" />
-
-  <h2 id="movie-title">Loading...</h2>
-
-  <div class="player-container" id="player-container" style="display: none;">
-    <div class="server-buttons">
-      <button id="server1-btn">Server 1</button>
-      <button id="server2-btn">Server 2</button>
-    </div>
-    <div class="responsive-player">
-      <iframe id="movie-player" src="" allowfullscreen allowtransparency allow="autoplay" scrolling="no"></iframe>
-    </div>
-  </div>
-
-  <div class="not-found" id="not-found" style="display: none;">Movie not found.</div>
-
-  <div class="footer">
-    <a href="/dmca.html" style="color: #ccc;">Request Removal</a> | &copy; 2025 MoviesVault. All rights reserved.
-  </div>
-
   <script>
-    const urlParams = new URLSearchParams(window.location.search);
-    const movieName = urlParams.get("movie")?.trim().toLowerCase();
-
     const SHEET_URL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
+    const SECRET_KEY = "MVACCESS"; // Change this to your own key
+    const SESSION_LIMIT_HOURS = 10;function protectPage() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const key = urlParams.get('key');
+  const movieSlug = urlParams.get('movie');
+  const now = new Date().getTime();
+  const sessionStart = localStorage.getItem('streamSessionStart');
 
-    const titleEl = document.getElementById("movie-title");
-    const playerContainer = document.getElementById("player-container");
-    const notFoundEl = document.getElementById("not-found");
-    const iframe = document.getElementById("movie-player");
+  if (key !== SECRET_KEY && !navigator.userAgent.includes("MoviesVaultOwner")) {
+    document.body.innerHTML = "";
+    return window.location.href = "/";
+  }
 
-    const server1Btn = document.getElementById("server1-btn");
-    const server2Btn = document.getElementById("server2-btn");
+  if (!sessionStart || now - parseInt(sessionStart) > SESSION_LIMIT_HOURS * 60 * 60 * 1000) {
+    localStorage.setItem('streamSessionStart', now);
+  } else {
+    const timeLeft = ((SESSION_LIMIT_HOURS * 60 * 60 * 1000 - (now - sessionStart)) / 3600000).toFixed(2);
+    console.log(`Session active. Time left: ${timeLeft} hrs`);
+  }
 
-    fetch(SHEET_URL)
-      .then((res) => res.json())
-      .then((data) => {
-        const movie = data.find(item => item["Movie name"]?.trim().toLowerCase() === movieName);
+  fetch(SHEET_URL)
+    .then(res => res.json())
+    .then(data => {
+      const movie = data.find(m => m.Movieslug === movieSlug);
+      if (!movie) return document.body.innerHTML = '<h2>Movie not found</h2>';
 
-        if (!movie) {
-          titleEl.textContent = "Movie Not Found";
-          notFoundEl.style.display = "block";
-          return;
-        }
+      document.getElementById('movie-name').textContent = movie["Movie name"];
+      const player = document.getElementById('player');
 
-        titleEl.textContent = movie["Movie name"];
-        playerContainer.style.display = "block";
-        iframe.src = movie["Server 1"];
+      function setServer(server) {
+        player.style.opacity = 0;
+        setTimeout(() => {
+          player.src = movie[server];
+          player.style.opacity = 1;
+        }, 300);
+      }
 
-        // Button toggle
-        server1Btn.classList.add("active");
-        server1Btn.onclick = () => {
-          iframe.src = movie["Server 1"];
-          server1Btn.classList.add("active");
-          server2Btn.classList.remove("active");
-        };
+      document.getElementById('server1').onclick = () => setServer('Server 1');
+      document.getElementById('server2').onclick = () => setServer('Server 2');
 
-        server2Btn.onclick = () => {
-          iframe.src = movie["Server 2"];
-          server2Btn.classList.add("active");
-          server1Btn.classList.remove("active");
-        };
-      })
-      .catch(() => {
-        titleEl.textContent = "Error loading movie.";
-        notFoundEl.style.display = "block";
-      });
+      setServer('Server 1');
+    });
+}
+
+document.addEventListener('DOMContentLoaded', protectPage);
+
+// Asset Protection
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('dragstart', e => e.preventDefault());
+document.addEventListener('selectstart', e => e.preventDefault());
+
   </script>
+</head>
+<body>
+  <header>MoviesVault</header>
+  <h2 id="movie-name">Loading...</h2>  <div class="server-buttons">
+    <button id="server1">Server 1</button>
+    <button id="server2">Server 2</button>
+  </div>  <div id="player-container">
+    <iframe id="player" src="" allowfullscreen allowtransparency allow="autoplay" scrolling="no"></iframe>
+  </div>  <footer>
+    <p><a href="/dmca.html" style="color:white; text-decoration: underline;">Request Removal</a></p>
+    <p>&copy; 2025 MoviesVault. All rights reserved.</p>
+  </footer>
 </body>
 </html>
