@@ -137,12 +137,15 @@
       } else if (link.includes("streamtape.com")) {
         iframe.width = "800";
         iframe.height = "600";
+        // Force embed version for clean player view
+        iframe.src = link.replace("/e/", "/embed/");
+        return;
       } else {
         iframe.width = "100%";
         iframe.height = "500";
       }
 
-      iframe.src = link.replace("/file/", "/embed/").replace("/e/", "/embed/");
+      iframe.src = link;
     }
   </script>
 
