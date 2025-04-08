@@ -342,12 +342,12 @@ footer {
 }
 
 .stream-btn:hover {
-  background-color: #f40612;
+  background-color: #228B22;
   transform: translateY(-2px);
 }
 
 .download-btn:hover {
-  background-color: #333;
+  background-color: #2196F3;
   transform: translateY(-2px);
 }
 
@@ -413,7 +413,7 @@ footer {
 .back-btn {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: var(--primary);
+  background-color: #228B22;
   color: white;
   border-radius: 20px;
   text-decoration: none;
