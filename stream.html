@@ -1,4 +1,5 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -76,66 +77,82 @@
   <script>
     const SHEET_URL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
     const SECRET_KEY = "MVACCESS"; // Change this to your own key
-    const SESSION_LIMIT_HOURS = 10;function protectPage() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const key = urlParams.get('key');
-  const movieSlug = urlParams.get('movie');
-  const now = new Date().getTime();
-  const sessionStart = localStorage.getItem('streamSessionStart');
+    const SESSION_LIMIT_HOURS = 10;
 
-  if (key !== SECRET_KEY && !navigator.userAgent.includes("MoviesVaultOwner")) {
-    document.body.innerHTML = "";
-    return window.location.href = "/";
-  }
+    function protectPage() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const key = urlParams.get('key');
+      const movieSlug = urlParams.get('movie');
+      const now = new Date().getTime();
+      const sessionStart = localStorage.getItem('streamSessionStart');
 
-  if (!sessionStart || now - parseInt(sessionStart) > SESSION_LIMIT_HOURS * 60 * 60 * 1000) {
-    localStorage.setItem('streamSessionStart', now);
-  } else {
-    const timeLeft = ((SESSION_LIMIT_HOURS * 60 * 60 * 1000 - (now - sessionStart)) / 3600000).toFixed(2);
-    console.log(`Session active. Time left: ${timeLeft} hrs`);
-  }
-
-  fetch(SHEET_URL)
-    .then(res => res.json())
-    .then(data => {
-      const movie = data.find(m => m.Movieslug === movieSlug);
-      if (!movie) return document.body.innerHTML = '<h2>Movie not found</h2>';
-
-      document.getElementById('movie-name').textContent = movie["Movie name"];
-      const player = document.getElementById('player');
-
-      function setServer(server) {
-        player.style.opacity = 0;
-        setTimeout(() => {
-          player.src = movie[server];
-          player.style.opacity = 1;
-        }, 300);
+      // Access Control
+      if (key !== SECRET_KEY && !navigator.userAgent.includes("MoviesVaultOwner")) {
+        document.body.innerHTML = "";
+        return window.location.href = "/";
       }
 
-      document.getElementById('server1').onclick = () => setServer('Server 1');
-      document.getElementById('server2').onclick = () => setServer('Server 2');
+      // Session Time Check
+      if (!sessionStart || now - parseInt(sessionStart) > SESSION_LIMIT_HOURS * 60 * 60 * 1000) {
+        localStorage.setItem('streamSessionStart', now);
+      } else {
+        const timeLeft = ((SESSION_LIMIT_HOURS * 60 * 60 * 1000 - (now - sessionStart)) / 3600000).toFixed(2);
+        console.log(`Session active. Time left: ${timeLeft} hrs`);
+      }
 
-      setServer('Server 1');
-    });
-}
+      // Fetch Movie Data
+      fetch(SHEET_URL)
+        .then(res => res.json())
+        .then(data => {
+          // Try to find the correct "Movieslug" column regardless of casing/spacing
+          const movie = data.find(m => {
+            const keys = Object.keys(m);
+            const slugKey = keys.find(k => k.trim().toLowerCase() === "movieslug");
+            return slugKey && m[slugKey]?.trim().toLowerCase() === movieSlug?.toLowerCase();
+          });
 
-document.addEventListener('DOMContentLoaded', protectPage);
+          if (!movie) {
+            document.body.innerHTML = '<h2>Movie not found</h2>';
+            return;
+          }
 
-// Asset Protection
-document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('dragstart', e => e.preventDefault());
-document.addEventListener('selectstart', e => e.preventDefault());
+          document.getElementById('movie-name').textContent = movie["Movie name"] || "Untitled Movie";
+          const player = document.getElementById('player');
 
+          function setServer(server) {
+            player.style.opacity = 0;
+            setTimeout(() => {
+              player.src = movie[server];
+              player.style.opacity = 1;
+            }, 300);
+          }
+
+          document.getElementById('server1').onclick = () => setServer('Server 1');
+          document.getElementById('server2').onclick = () => setServer('Server 2');
+
+          setServer('Server 1');
+        });
+    }
+
+    document.addEventListener('DOMContentLoaded', protectPage);
+
+    // Asset Protection
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('dragstart', e => e.preventDefault());
+    document.addEventListener('selectstart', e => e.preventDefault());
   </script>
 </head>
 <body>
   <header>MoviesVault</header>
-  <h2 id="movie-name">Loading...</h2>  <div class="server-buttons">
+  <h2 id="movie-name">Loading...</h2>
+  <div class="server-buttons">
     <button id="server1">Server 1</button>
     <button id="server2">Server 2</button>
-  </div>  <div id="player-container">
+  </div>
+  <div id="player-container">
     <iframe id="player" src="" allowfullscreen allowtransparency allow="autoplay" scrolling="no"></iframe>
-  </div>  <footer>
+  </div>
+  <footer>
     <p><a href="/dmca.html" style="color:white; text-decoration: underline;">Request Removal</a></p>
     <p>&copy; 2025 MoviesVault. All rights reserved.</p>
   </footer>
