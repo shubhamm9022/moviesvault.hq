@@ -42,13 +42,13 @@
     }
 
     #logo {
-      max-width: 380px; /* increased from 320px */
+      max-width: 380px;
       width: 100%;
       margin-bottom: 35px;
     }
 
     h1#movie-name {
-      font-size: 2rem; /* increased from 1.6rem */
+      font-size: 2rem;
       font-weight: 700;
       text-align: center;
       margin-bottom: 10px;
@@ -80,7 +80,7 @@
 
     footer {
       margin-top: 40px;
-      font-size: 1rem; /* increased font size */
+      font-size: 1rem;
       color: #aaa;
       text-align: center;
       padding-bottom: 20px;
@@ -98,14 +98,12 @@
   </style>
 </head>
 <body oncontextmenu="return false" ondragstart="return false">
-
   <!-- Preloader -->
   <div id="preloader">
     <div class="loader"></div>
   </div>
 
   <img id="logo" src="logo.png" alt="Movies Vault Logo">
-
   <h1 id="movie-name">Loading...</h1>
   <div class="streaming-info" id="streaming-info">Streaming Now: ...</div>
 
@@ -170,6 +168,5 @@
         document.getElementById("preloader").style.display = "none";
       });
   </script>
-
 </body>
 </html>
