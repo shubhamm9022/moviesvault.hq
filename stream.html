@@ -2,159 +2,109 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Stream | MoviesVault</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Movie Stream</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #0d0d0d;
+      background-color: #121212;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      font-family: Arial, sans-serif;
+      text-align: center;
       padding: 20px;
     }
-    header {
-      font-size: 2rem;
+    .logo {
+      font-size: 24px;
       font-weight: bold;
       margin-bottom: 10px;
     }
-    h2 {
-      margin: 10px 0;
-      font-size: 1.5rem;
+    .movie-title {
+      font-size: 22px;
+      margin-bottom: 20px;
     }
-    #player-container {
-      width: 100%;
-      max-width: 800px;
-      height: 600px;
-      margin: 20px 0;
-      background-color: #111;
-      border-radius: 10px;
-      overflow: hidden;
-      transition: opacity 0.3s ease;
+    .btn-group {
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      margin: 5px;
+      background-color: #ff3838;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    .btn:hover {
+      background-color: #ff5e5e;
     }
     iframe {
       width: 100%;
-      height: 100%;
+      height: 500px;
       border: none;
+      border-radius: 10px;
     }
-    .server-buttons {
-      display: flex;
-      gap: 10px;
-      margin-bottom: 30px;
-    }
-    .server-buttons button {
-      padding: 10px 20px;
-      background: #1f1f1f;
-      border: none;
-      color: white;
-      border-radius: 5px;
-      cursor: pointer;
-      transition: background 0.3s;
-    }
-    .server-buttons button:hover {
-      background: #333;
-    }
-    footer {
-      margin-top: 50px;
-      text-align: center;
-      font-size: 0.9rem;
-      opacity: 0.7;
-    }
-    @media(max-width: 768px) {
-      #player-container {
-        height: 360px;
-      }
-      header {
-        font-size: 1.5rem;
-      }
-      h2 {
-        font-size: 1.2rem;
-      }
+    .footer {
+      margin-top: 40px;
+      font-size: 14px;
+      color: #999;
     }
   </style>
+</head>
+<body>
+  <div class="logo">MoviesVault</div>
+  <div class="movie-title" id="movieName">Loading...</div>
+
+  <div class="btn-group" id="serverButtons" style="display: none;">
+    <button class="btn" onclick="switchServer(1)">Server 1</button>
+    <button class="btn" onclick="switchServer(2)">Server 2</button>
+  </div>
+
+  <div id="playerContainer">
+    <iframe id="playerFrame" src="" allowfullscreen></iframe>
+  </div>
+
+  <div class="footer">
+    <a href="/request.html" style="color:#999">Request Removal</a> | &copy; 2025 MoviesVault
+  </div>
+
   <script>
-    const SHEET_URL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
-    const SECRET_KEY = "MVACCESS"; // Change this to your own key
-    const SESSION_LIMIT_HOURS = 10;
+    const params = new URLSearchParams(window.location.search);
+    const movieSlug = (params.get("movie") || "").trim().toLowerCase();
+    const accessKey = params.get("key");
 
-    function protectPage() {
-      const urlParams = new URLSearchParams(window.location.search);
-      const key = urlParams.get('key');
-      const movieSlug = urlParams.get('movie');
-      const now = new Date().getTime();
-      const sessionStart = localStorage.getItem('streamSessionStart');
-
-      // Access Control
-      if (key !== SECRET_KEY && !navigator.userAgent.includes("MoviesVaultOwner")) {
-        document.body.innerHTML = "";
-        return window.location.href = "/";
-      }
-
-      // Session Time Check
-      if (!sessionStart || now - parseInt(sessionStart) > SESSION_LIMIT_HOURS * 60 * 60 * 1000) {
-        localStorage.setItem('streamSessionStart', now);
-      } else {
-        const timeLeft = ((SESSION_LIMIT_HOURS * 60 * 60 * 1000 - (now - sessionStart)) / 3600000).toFixed(2);
-        console.log(`Session active. Time left: ${timeLeft} hrs`);
-      }
-
-      // Fetch Movie Data
-      fetch(SHEET_URL)
+    if (accessKey !== "MVACCESS2025") {
+      document.body.innerHTML = "<h2>Access Denied</h2>";
+    } else {
+      fetch("https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2")
         .then(res => res.json())
         .then(data => {
-          // Try to find the correct "Movieslug" column regardless of casing/spacing
-          const movie = data.find(m => {
-            const keys = Object.keys(m);
-            const slugKey = keys.find(k => k.trim().toLowerCase() === "movieslug");
-            return slugKey && m[slugKey]?.trim().toLowerCase() === movieSlug?.toLowerCase();
-          });
+          const movie = data.find(
+            m => m.Movieslug && m.Movieslug.trim().toLowerCase() === movieSlug
+          );
 
-          if (!movie) {
-            document.body.innerHTML = '<h2>Movie not found</h2>';
-            return;
+          if (movie) {
+            document.getElementById("movieName").textContent = movie["Movie name"];
+            document.getElementById("serverButtons").style.display = "block";
+
+            const server1 = movie["Server 1"];
+            const server2 = movie["Server 2"];
+
+            window.currentLinks = { server1, server2 };
+            document.getElementById("playerFrame").src = server1 || server2 || "";
+          } else {
+            document.getElementById("movieName").textContent = "Movie not found.";
+            document.getElementById("playerContainer").style.display = "none";
           }
-
-          document.getElementById('movie-name').textContent = movie["Movie name"] || "Untitled Movie";
-          const player = document.getElementById('player');
-
-          function setServer(server) {
-            player.style.opacity = 0;
-            setTimeout(() => {
-              player.src = movie[server];
-              player.style.opacity = 1;
-            }, 300);
-          }
-
-          document.getElementById('server1').onclick = () => setServer('Server 1');
-          document.getElementById('server2').onclick = () => setServer('Server 2');
-
-          setServer('Server 1');
+        })
+        .catch(err => {
+          document.getElementById("movieName").textContent = "Error loading movie.";
+          console.error(err);
         });
     }
 
-    document.addEventListener('DOMContentLoaded', protectPage);
-
-    // Asset Protection
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('dragstart', e => e.preventDefault());
-    document.addEventListener('selectstart', e => e.preventDefault());
+    function switchServer(server) {
+      const src = server === 1 ? window.currentLinks.server1 : window.currentLinks.server2;
+      document.getElementById("playerFrame").src = src || "";
+    }
   </script>
-</head>
-<body>
-  <header>MoviesVault</header>
-  <h2 id="movie-name">Loading...</h2>
-  <div class="server-buttons">
-    <button id="server1">Server 1</button>
-    <button id="server2">Server 2</button>
-  </div>
-  <div id="player-container">
-    <iframe id="player" src="" allowfullscreen allowtransparency allow="autoplay" scrolling="no"></iframe>
-  </div>
-  <footer>
-    <p><a href="/dmca.html" style="color:white; text-decoration: underline;">Request Removal</a></p>
-    <p>&copy; 2025 MoviesVault. All rights reserved.</p>
-  </footer>
 </body>
 </html>
