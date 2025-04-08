@@ -40,24 +40,28 @@ header {
   max-height: 90px;
   width: auto;
 }
-
 .search-bar {
   display: flex;
+  flex-direction: row;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 #searchInput {
-  flex: 1;
+  flex: 1 1 60%;
   padding: 0.8rem;
   border-radius: 5px;
   border: none;
   background-color: var(--light-dark);
   color: var(--text);
+  min-width: 0;
 }
 
 .search-bar button {
+  flex: 0 0 auto;
   padding: 0.8rem 1.5rem;
   border: none;
   background-color: var(--primary);
