@@ -27,34 +27,27 @@
 
     #player-container {
       margin: 20px auto;
-      max-width: 100%;
+      width: 100%;
+      max-width: 900px;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+      border-radius: 12px;
+      overflow: hidden;
     }
 
     iframe {
       width: 100%;
-      max-width: 800px;
+      height: 100%;
       border: none;
       display: block;
-      margin: 0 auto;
     }
 
-    #buttons {
-      margin: 1rem 0;
-    }
-
-    .server-btn {
-      padding: 10px 20px;
-      background: #222;
-      color: #fff;
-      border: none;
-      margin: 5px;
-      cursor: pointer;
-      border-radius: 8px;
-      transition: background 0.3s ease;
-    }
-
-    .server-btn:hover {
-      background: #444;
+    @media (max-width: 768px) {
+      #player-container {
+        max-width: 100%;
+        border-radius: 0;
+      }
     }
   </style>
 </head>
@@ -65,11 +58,6 @@
   </header>
 
   <h1 id="movie-name">Loading...</h1>
-
-  <div id="buttons">
-    <button class="server-btn" onclick="switchServer('server1')">Server 1</button>
-    <button class="server-btn" onclick="switchServer('server2')">Server 2</button>
-  </div>
 
   <div id="player-container">
     <iframe id="movie-frame" allowfullscreen></iframe>
@@ -94,7 +82,7 @@
       sessionStorage.setItem('mv_session_start', now);
     } else {
       const diff = now - parseInt(storedStart);
-      const maxTime = 10 * 60 * 60 * 1000; // 10 hours in ms
+      const maxTime = 10 * 60 * 60 * 1000;
       if (diff > maxTime) {
         document.body.innerHTML = "<h2>Session expired. Access limited to 10 hours.</h2>";
         throw new Error("Session expired");
@@ -102,7 +90,6 @@
     }
 
     const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
-    let currentData = {};
 
     fetch(sheetURL)
       .then(res => res.json())
@@ -114,39 +101,16 @@
         }
 
         document.getElementById("movie-name").textContent = movie["Movie name"];
-        currentData = {
-          server1: movie["Server 1"],
-          server2: movie["Server 2"]
-        };
+        const mainLink = movie["Server 1"];
+        const iframe = document.getElementById("movie-frame");
 
-        switchServer('server1');
+        if (!mainLink) {
+          iframe.srcdoc = "<p>Link not available</p>";
+          return;
+        }
+
+        iframe.src = mainLink.replace("/file/", "/embed/").replace("/e/", "/embed/");
       });
-
-    function switchServer(server) {
-      const iframe = document.getElementById("movie-frame");
-      const link = currentData[server];
-
-      if (!link) {
-        iframe.srcdoc = "<p>Link not available</p>";
-        return;
-      }
-
-      if (link.includes("smoothpre.com")) {
-        iframe.width = "640";
-        iframe.height = "360";
-      } else if (link.includes("streamtape.com")) {
-        iframe.width = "800";
-        iframe.height = "600";
-        // Force embed version for clean player view
-        iframe.src = link.replace("/e/", "/embed/");
-        return;
-      } else {
-        iframe.width = "100%";
-        iframe.height = "500";
-      }
-
-      iframe.src = link;
-    }
   </script>
 
 </body>
