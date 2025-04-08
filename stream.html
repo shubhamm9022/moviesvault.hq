@@ -13,9 +13,8 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
       min-height: 100vh;
-      padding: 20px 10px;
+      padding: 30px 10px 20px;
     }
 
     #preloader {
@@ -43,9 +42,26 @@
     }
 
     #logo {
-      max-width: 280px;
+      max-width: 250px;
       width: 100%;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
+    }
+
+    .streaming-now {
+      font-size: 1rem;
+      margin: 5px 0 15px;
+      color: #4fa3ff;
+      font-weight: 600;
+      animation: glow 1.5s ease-in-out infinite alternate;
+    }
+
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #4fa3ff, 0 0 10px #4fa3ff;
+      }
+      to {
+        text-shadow: 0 0 15px #4fa3ff, 0 0 25px #4fa3ff;
+      }
     }
 
     .player-wrapper {
@@ -55,14 +71,15 @@
       padding: 20px;
       width: 100%;
       max-width: 960px;
+      margin-top: 10px;
       box-shadow: 0 0 12px rgba(0,0,0,0.7);
       box-sizing: border-box;
     }
 
     h1 {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       text-align: center;
-      margin-bottom: 15px;
+      margin-bottom: 12px;
     }
 
     #player-container {
@@ -79,7 +96,7 @@
     }
 
     footer {
-      margin-top: 20px;
+      margin-top: 25px;
       font-size: 0.9rem;
       color: #aaa;
       text-align: center;
@@ -103,6 +120,7 @@
   </div>
 
   <img id="logo" src="logo.png" alt="Movies Vault Logo">
+  <div class="streaming-now">Streaming Now...</div>
 
   <div class="player-wrapper">
     <h1 id="movie-name">Loading...</h1>
@@ -122,13 +140,11 @@
     const accessKey = urlParams.get('key');
     const validKey = 'MVACCESS2025';
 
-    // Access check
     if (accessKey !== validKey) {
       document.body.innerHTML = "<h2 style='text-align:center;'>Access Denied</h2>";
       throw new Error("Invalid key");
     }
 
-    // Session time limit
     const now = Date.now();
     const sessionStart = sessionStorage.getItem('mv_session_start');
     if (!sessionStart) {
@@ -141,7 +157,6 @@
       }
     }
 
-    // Load movie from Sheet
     const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
 
     fetch(sheetURL)
@@ -160,7 +175,6 @@
         const link = movie["Server 1"];
         iframe.src = link ? link.replace("/file/", "/embed/").replace("/e/", "/embed/") : "";
 
-        // Hide loader
         document.getElementById("preloader").style.display = "none";
       })
       .catch(err => {
