@@ -117,45 +117,41 @@
   </footer>
 
   <script>
-    // 1. Get the encoded slug from the URL and decode it
     const urlParams = new URLSearchParams(window.location.search);
-    const movieSlug = decodeURIComponent(urlParams.get('movie') || '');
+    const movieSlug = urlParams.get('movie');
 
-    // 2. Check for session time limit
+    // 10 hour session limit
     const now = Date.now();
     const sessionStart = sessionStorage.getItem('mv_session_start');
     if (!sessionStart) {
       sessionStorage.setItem('mv_session_start', now);
     } else {
-      const maxDuration = 10 * 60 * 60 * 1000; // 10 hours
+      const maxDuration = 10 * 60 * 60 * 1000;
       if (now - parseInt(sessionStart) > maxDuration) {
         document.body.innerHTML = "<h2 style='text-align:center;'>Session expired. Access limited to 10 hours.</h2>";
         throw new Error("Session expired");
       }
     }
 
-    // 3. Fetch movie data from Google Sheet
     const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
 
     fetch(sheetURL)
       .then(res => res.json())
       .then(data => {
         const movie = data.find(m => m["Movieslug"] === movieSlug);
-        const nameEl = document.getElementById("movie-name");
-        const streamInfo = document.getElementById("streaming-info");
-        const iframe = document.getElementById("movie-frame");
 
         if (!movie) {
-          nameEl.textContent = "Movie not found";
-          streamInfo.textContent = "";
+          document.getElementById("movie-name").textContent = "Movie not found";
+          document.getElementById("streaming-info").textContent = "";
           return;
         }
 
-        nameEl.textContent = movie["Movie name"];
-        streamInfo.textContent = `Streaming Now: ${movie["Movie name"]}`;
+        document.getElementById("movie-name").textContent = movie["Movie name"];
+        document.getElementById("streaming-info").textContent = `Streaming Now: ${movie["Movie name"]}`;
 
         const link = movie["Server 1"];
-        iframe.src = link ? link.replace("/file/", "/embed/").replace("/e/", "/embed/") : "";
+        const embedLink = link.replace("/file/", "/embed/").replace("/e/", "/embed/");
+        document.getElementById("movie-frame").src = embedLink;
 
         document.getElementById("preloader").style.display = "none";
       })
