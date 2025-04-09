@@ -117,28 +117,24 @@
   </footer>
 
   <script>
+    // 1. Get the encoded slug from the URL and decode it
     const urlParams = new URLSearchParams(window.location.search);
-    const movieSlug = urlParams.get('movie');
-    const accessKey = urlParams.get('key');
-    const validKey = 'MVACCESS2025';
+    const movieSlug = decodeURIComponent(urlParams.get('movie') || '');
 
-    if (accessKey !== validKey) {
-      document.body.innerHTML = "<h2 style='text-align:center;'>Access Denied</h2>";
-      throw new Error("Invalid key");
-    }
-
+    // 2. Check for session time limit
     const now = Date.now();
     const sessionStart = sessionStorage.getItem('mv_session_start');
     if (!sessionStart) {
       sessionStorage.setItem('mv_session_start', now);
     } else {
-      const maxDuration = 10 * 60 * 60 * 1000;
+      const maxDuration = 10 * 60 * 60 * 1000; // 10 hours
       if (now - parseInt(sessionStart) > maxDuration) {
         document.body.innerHTML = "<h2 style='text-align:center;'>Session expired. Access limited to 10 hours.</h2>";
         throw new Error("Session expired");
       }
     }
 
+    // 3. Fetch movie data from Google Sheet
     const sheetURL = "https://opensheet.elk.sh/1oDtwyGB7ArzmWtP81I2QeBNXAiEefgTOepAHqwRfNZs/Sheet2";
 
     fetch(sheetURL)
