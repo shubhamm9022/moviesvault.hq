@@ -3,26 +3,26 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title id="seo-title">Movie Details | Movie Vault</title>
+  <title id="seo-title">Movie Details | Movies Vault</title>
 
   <!-- SEO Meta Tags -->
-  <meta name="description" content="Watch and download your favorite movie on Movie Vault. High-quality print, fast streaming, and download links." id="seo-description">
-  <meta name="keywords" content="Movie Vault, movies, download, stream, HD movies, movie details">
-  <meta name="author" content="Movie Vault">
+  <meta name="description" content="Watch and download your favorite movie on Movies Vault. High-quality print, fast streaming, and download links." id="seo-description">
+  <meta name="keywords" content="Movies Vault, movies, download, stream, HD movies, movie details">
+  <meta name="author" content="Movies Vault">
   <link rel="canonical" href="https://moviesvault.fun/movie.html" id="canonical-link">
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website">
-  <meta property="og:title" content="Movie Details | Movie Vault" id="og-title">
-  <meta property="og:description" content="Stream and download movies in high quality from Movie Vault." id="og-description">
+  <meta property="og:title" content="Movie Details | Movies Vault" id="og-title">
+  <meta property="og:description" content="Stream and download movies in high quality from Movies Vault." id="og-description">
   <meta property="og:image" content="poster.jpg" id="og-image">
   <meta property="og:url" content="https://moviesvault.fun/movie.html" id="og-url">
-  <meta property="og:site_name" content="Movie Vault">
+  <meta property="og:site_name" content="Movies Vault">
 
   <!-- Twitter -->
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Movie Details | Movie Vault" id="twitter-title">
-  <meta name="twitter:description" content="Stream and download movies in high quality from Movie Vault." id="twitter-description">
+  <meta name="twitter:title" content="Movie Details | Movies Vault" id="twitter-title">
+  <meta name="twitter:description" content="Stream and download movies in high quality from Movies Vault." id="twitter-description">
   <meta name="twitter:image" content="poster.jpg" id="twitter-image">
 
   <!-- Fonts & Styles -->
@@ -132,16 +132,16 @@
         }
 
         // ✅ Dynamic SEO Tags
-        document.getElementById('seo-title').innerText = `${movie.title} (${movie.year}) | Movie Vault`;
-        document.getElementById('seo-description').setAttribute("content", movie.description || "Stream or download this movie now on Movie Vault!");
+        document.getElementById('seo-title').innerText = `${movie.title} (${movie.year}) | Movies Vault`;
+        document.getElementById('seo-description').setAttribute("content", movie.description || "Stream or download this movie now on Movies Vault!");
         document.getElementById('canonical-link').setAttribute("href", window.location.href);
 
-        document.getElementById('og-title').setAttribute("content", movie.title + " | Movie Vault");
+        document.getElementById('og-title').setAttribute("content", movie.title + " | Movies Vault");
         document.getElementById('og-description').setAttribute("content", movie.description || "Watch and download HD movies now.");
         document.getElementById('og-image').setAttribute("content", movie.poster_url);
         document.getElementById('og-url').setAttribute("content", window.location.href);
 
-        document.getElementById('twitter-title').setAttribute("content", movie.title + " | Movie Vault");
+        document.getElementById('twitter-title').setAttribute("content", movie.title + " | Movies Vault");
         document.getElementById('twitter-description').setAttribute("content", movie.description || "Watch and download HD movies now.");
         document.getElementById('twitter-image').setAttribute("content", movie.poster_url);
 
