@@ -1,4 +1,4 @@
-root {
+:root {
   --primary: #28a745;
   --secondary: #1f1f1f;
   --dark: #121212;
@@ -40,27 +40,31 @@ header {
   max-height: 90px;
   width: auto;
 }
-
 .search-bar {
   display: flex;
+  flex-direction: row;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   margin: 0 auto;
+  gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 #searchInput {
-  flex: 1;
+  flex: 1 1 60%;
   padding: 0.8rem;
   border-radius: 5px;
   border: none;
   background-color: var(--light-dark);
   color: var(--text);
+  min-width: 0;
 }
 
 .search-bar button {
+  flex: 0 0 auto;
   padding: 0.8rem 1.5rem;
   border: none;
-  background-color: var(--primary);
+  background-color: #228B22;
   color: white;
   border-radius: 5px;
   cursor: pointer;
@@ -69,8 +73,8 @@ header {
 
 /* Notice Box */
 .notice-box {
-  background-color: var(--primary);
-  color: var(--dark);
+  background-color: #3b3b3b;
+  color: #fff;
   text-align: center;
   padding: 0.5rem 1rem;
   margin: 1rem 0;
@@ -78,7 +82,7 @@ header {
 }
 
 .notice-box a {
-  color: var(--dark);
+  color: #f1d204;
   font-weight: bold;
   text-decoration: none;
 }
@@ -107,10 +111,10 @@ header {
 }
 
 .category-btn.active {
-  background-color: var(--primary);
+  background-color: #228B22;
 }
 
-/* Updated Movie Card Styles - Removed Underlines */
+/* Movie Card Styles */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 8px;
@@ -170,31 +174,49 @@ header {
   padding: 1.2rem;
 }
 
-/* Mobile Optimizations */
+/* Mobile Optimizations - Updated to match reference image */
 @media (max-width: 768px) {
   #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
     gap: 1rem;
     padding: 1rem;
   }
   
+  .movie-card {
+    background-color: var(--secondary);
+    border-radius: 0;
+    border: none;
+  }
+  
   .movie-card img {
     height: 220px;
+    border-radius: 0;
+    border-bottom: 2px solid var(--primary);
+  }
+  
+  .movie-info {
+    padding: 0.8rem 0.5rem;
+  }
+  
+  .movie-card h3 {
+    font-size: 0.95rem;
+    text-align: left;
+    font-weight: 500;
+  }
+  
+  .movie-card p {
+    text-align: left;
+    font-size: 0.8rem;
   }
 }
 
 @media (max-width: 480px) {
   #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-    gap: 0.8rem;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   }
   
   .movie-card img {
-    height: 190px;
-  }
-  
-  .movie-info {
-    padding: 0.5rem 0.4rem;
+    height: 200px;
   }
 }
 
@@ -209,7 +231,7 @@ header {
 
 .pagination button {
   padding: 0.5rem 1rem;
-  background-color: var(--primary);
+  background-color: #228B22;
   color: white;
   border: none;
   border-radius: 5px;
@@ -309,23 +331,23 @@ footer {
 }
 
 .stream-btn {
-  background-color: #e50914;
+  background-color: #228B22;
   color: white;
 }
 
 .download-btn {
-  background-color: #221f1f;
+  background-color: #2196F3;
   color: white;
   border: 1px solid #444;
 }
 
 .stream-btn:hover {
-  background-color: #f40612;
+  background-color: #228B22;
   transform: translateY(-2px);
 }
 
 .download-btn:hover {
-  background-color: #333;
+  background-color: #2196F3;
   transform: translateY(-2px);
 }
 
@@ -385,15 +407,13 @@ footer {
   .logo {
     max-height: 60px;
   }
+}
 
-  .movie-card img {
-    height: 200px;
-  }
-}/* Added Back Button Style - Only for movie.html */
+/* Added Back Button Style - Only for movie.html */
 .back-btn {
   display: inline-block;
   padding: 0.5rem 1rem;
-  background-color: var(--primary);
+  background-color: #228B22;
   color: white;
   border-radius: 20px;
   text-decoration: none;
@@ -413,5 +433,4 @@ footer {
     display: block;
     width: fit-content;
   }
-}:
-
+}
