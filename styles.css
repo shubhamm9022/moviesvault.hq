@@ -5,13 +5,14 @@
   --light-dark: #333;
   --text: #fff;
   --text-secondary: #ccc;
+  --glow-color: rgba(46, 204, 113, 0.4);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Poppins', sans-serif;
+  font-family: 'Arial', sans-serif; /* Changed to match screenshot font */
 }
 
 body {
@@ -127,6 +128,12 @@ header {
   display: flex;
   flex-direction: column;
   position: relative;
+  box-shadow: 0 0 10px var(--glow-color);
+}
+
+.movie-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 15px var(--glow-color);
 }
 
 .movie-card img {
@@ -146,7 +153,6 @@ header {
   background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
   color: white;
   padding: 1.5rem 0.5rem 0.5rem;
-  font-family: 'Arial', sans-serif;
   font-weight: bold;
   font-size: 1.1rem;
   text-align: center;
@@ -154,15 +160,33 @@ header {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  letter-spacing: 0.5px;
 }
 
 .movie-info {
-  padding: 0.6rem 0.5rem;
+  padding: 0.8rem 0.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
-  display: none;
+}
+
+.movie-info h3 {
+  color: white;
+  font-weight: bold;
+  font-size: 1rem;
+  margin: 0;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 5px var(--glow-color);
+  letter-spacing: 0.5px;
+}
+
+.movie-info p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  text-align: center;
+  margin-top: 0.3rem;
 }
 
 /* Grid container */
@@ -197,6 +221,10 @@ header {
     font-size: 1rem;
     padding: 1rem 0.5rem 0.5rem;
   }
+  
+  .movie-info h3 {
+    font-size: 0.95rem;
+  }
 }
 
 @media (max-width: 480px) {
@@ -210,6 +238,10 @@ header {
   
   .movie-card::after {
     font-size: 0.9rem;
+  }
+  
+  .movie-info h3 {
+    font-size: 0.85rem;
   }
 }
 
@@ -294,6 +326,8 @@ footer {
 .movie-content h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .movie-year, .movie-genre {
@@ -337,11 +371,13 @@ footer {
 .stream-btn:hover {
   background-color: #228B22;
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px var(--glow-color);
 }
 
 .download-btn:hover {
   background-color: #2196F3;
   transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(33, 150, 243, 0.4);
 }
 
 /* Responsive Design */
@@ -413,11 +449,14 @@ footer {
   font-weight: 600;
   transition: all 0.3s ease;
   margin-left: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .back-btn:hover {
   background-color: #218838;
   transform: translateY(-1px);
+  box-shadow: 0 3px 10px var(--glow-color);
 }
 
 @media (max-width: 768px) {
