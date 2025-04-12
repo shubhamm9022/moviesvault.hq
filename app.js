@@ -18,7 +18,7 @@ const nextPageBtn = document.getElementById('nextPage');
 let movies = [];
 let filteredMovies = [];
 let currentPage = 1;
-const itemsPerPage = 40;
+const itemsPerPage = 10; // Change this to control movies per page
 
 // Fetch Movies from Google Sheets
 async function fetchMovies() {
@@ -55,7 +55,7 @@ function renderMovies() {
 // Search Function
 function handleSearch() {
   const query = searchInput.value.toLowerCase();
-  filteredMovies = movies.filter(movie => 
+  filteredMovies = movies.filter(movie =>
     movie.title.toLowerCase().includes(query)
   );
   currentPage = 1;
@@ -76,7 +76,7 @@ categoryButtons.forEach(btn => {
     if (category === 'all') {
       filteredMovies = movies;
     } else {
-      filteredMovies = movies.filter(movie => 
+      filteredMovies = movies.filter(movie =>
         movie.genre.toLowerCase().includes(category.toLowerCase())
       );
     }
@@ -87,21 +87,18 @@ categoryButtons.forEach(btn => {
   });
 });
 
-// Pagination
+// Updated Pagination
 function renderPagination() {
   const totalPages = Math.ceil(filteredMovies.length / itemsPerPage);
-  paginationContainer.innerHTML = '';
 
-  if (totalPages <= 1) return;
+  if (currentPage > totalPages) currentPage = 1;
+
+  // Remove old page buttons
+  const oldBtns = paginationContainer.querySelectorAll('.page-btn');
+  oldBtns.forEach(btn => btn.remove());
 
   prevPageBtn.disabled = currentPage === 1;
-  prevPageBtn.onclick = () => {
-    if (currentPage > 1) {
-      currentPage--;
-      renderMovies();
-      renderPagination();
-    }
-  };
+  nextPageBtn.disabled = currentPage === totalPages;
 
   for (let i = 1; i <= totalPages; i++) {
     const btn = document.createElement('button');
@@ -115,7 +112,14 @@ function renderPagination() {
     paginationContainer.insertBefore(btn, nextPageBtn);
   }
 
-  nextPageBtn.disabled = currentPage === totalPages;
+  prevPageBtn.onclick = () => {
+    if (currentPage > 1) {
+      currentPage--;
+      renderMovies();
+      renderPagination();
+    }
+  };
+
   nextPageBtn.onclick = () => {
     if (currentPage < totalPages) {
       currentPage++;
