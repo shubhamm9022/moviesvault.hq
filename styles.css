@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
 :root {
   --primary: #28a745;
   --secondary: #1f1f1f;
@@ -14,7 +16,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -25,7 +27,7 @@ body {
   flex-direction: column;
 }
 
-/* Header Styles */
+/* Header */
 header {
   background-color: var(--secondary);
   padding: 1rem 2rem;
@@ -62,7 +64,6 @@ header {
   border: none;
   background-color: var(--light-dark);
   color: var(--text);
-  min-width: 0;
   font-size: 1rem;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -133,7 +134,7 @@ header {
   color: white;
 }
 
-/* Movie Card Styles - Updated to match screenshot */
+/* Movie Cards */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 8px;
@@ -224,7 +225,7 @@ header {
   border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-/* Grid container */
+/* Grid Container */
 #movie-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -299,11 +300,11 @@ footer {
     gap: 1rem;
     padding: 1rem;
   }
-  
+
   .movie-card img {
     height: 220px;
   }
-  
+
   .movie-info h3 {
     font-size: 0.95rem;
   }
@@ -312,11 +313,7 @@ footer {
     flex-direction: column;
   }
 
-  #searchInput {
-    width: 100%;
-  }
-
-  .search-bar button {
+  #searchInput, .search-bar button {
     width: 100%;
   }
 }
@@ -325,15 +322,15 @@ footer {
   #movie-container {
     grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
   }
-  
+
   .movie-card img {
     height: 180px;
   }
-  
+
   .movie-info h3 {
     font-size: 0.85rem;
   }
-  
+
   .movie-info p {
     font-size: 0.75rem;
   }
@@ -343,3 +340,4 @@ footer {
     font-size: 0.8rem;
   }
 }
+
