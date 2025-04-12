@@ -18,7 +18,7 @@ const nextPageBtn = document.getElementById('nextPage');
 let movies = [];
 let filteredMovies = [];
 let currentPage = 1;
-const itemsPerPage = 10; // Change this to control movies per page
+const itemsPerPage = 15; // Change this to control movies per page
 
 // Fetch Movies from Google Sheets
 async function fetchMovies() {
