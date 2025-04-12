@@ -1,22 +1,17 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
-
-:root {
+root {
   --primary: #28a745;
   --secondary: #1f1f1f;
   --dark: #121212;
   --light-dark: #333;
   --text: #fff;
   --text-secondary: #ccc;
-  --glow-color: rgba(46, 204, 113, 0.4);
-  --card-outline: rgba(255, 255, 255, 0.2);
-  --card-highlight: rgba(255, 255, 255, 0.05);
 }
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Roboto', system-ui, -apple-system, sans-serif;
+  font-family: 'Poppins', sans-serif;
 }
 
 body {
@@ -27,14 +22,13 @@ body {
   flex-direction: column;
 }
 
-/* Header */
+/* Header Styles */
 header {
   background-color: var(--secondary);
   padding: 1rem 2rem;
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .logo-container {
@@ -49,55 +43,42 @@ header {
 
 .search-bar {
   display: flex;
-  flex-direction: row;
   width: 100%;
-  max-width: 600px;
+  max-width: 800px;
   margin: 0 auto;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 }
 
 #searchInput {
-  flex: 1 1 60%;
-  padding: 0.8rem 1rem;
+  flex: 1;
+  padding: 0.8rem;
   border-radius: 5px;
   border: none;
   background-color: var(--light-dark);
   color: var(--text);
-  font-size: 1rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .search-bar button {
-  flex: 0 0 auto;
   padding: 0.8rem 1.5rem;
   border: none;
-  background-color: #228B22;
+  background-color: var(--primary);
   color: white;
   border-radius: 5px;
   cursor: pointer;
   font-weight: 600;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.search-bar button:hover {
-  background-color: #1e7b1e;
 }
 
 /* Notice Box */
 .notice-box {
-  background-color: #3b3b3b;
-  color: #fff;
+  background-color: var(--primary);
+  color: var(--dark);
   text-align: center;
   padding: 0.5rem 1rem;
   margin: 1rem 0;
   border-radius: 5px;
-  border-left: 4px solid #f1d204;
 }
 
 .notice-box a {
-  color: #f1d204;
+  color: var(--dark);
   font-weight: bold;
   text-decoration: none;
 }
@@ -113,28 +94,23 @@ header {
   gap: 1rem;
   flex-wrap: wrap;
   padding: 1rem 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .category-btn {
-  padding: 0.5rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 20px;
   background-color: var(--light-dark);
   color: var(--text);
   border: none;
   cursor: pointer;
   transition: all 0.3s;
-  font-weight: 500;
-  font-size: 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .category-btn.active {
-  background-color: #228B22;
-  color: white;
+  background-color: var(--primary);
 }
 
-/* Movie Cards */
+/* Updated Movie Card Styles - Removed Underlines */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 8px;
@@ -145,32 +121,6 @@ header {
   height: 100%;
   display: flex;
   flex-direction: column;
-  position: relative;
-  box-shadow: 0 0 0 1px var(--card-outline);
-  background: linear-gradient(145deg, #1e1e1e, #2a2a2a);
-}
-
-.movie-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.3), 
-              0 5px 15px var(--glow-color);
-  background: linear-gradient(145deg, #252525, #303030);
-}
-
-.movie-card::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 100%;
-  background: linear-gradient(
-    to bottom,
-    transparent 60%,
-    var(--card-highlight) 80%,
-    transparent 100%
-  );
-  pointer-events: none;
 }
 
 .movie-card img {
@@ -178,59 +128,74 @@ header {
   height: 260px;
   object-fit: cover;
   object-position: center top;
-  transition: transform 0.3s ease;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .movie-info {
-  padding: 1rem;
+  padding: 0.6rem 0.5rem;
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
-.movie-info h3 {
-  color: white;
-  font-weight: 600;
+.movie-card h3 {
   font-size: 1rem;
   margin: 0;
-  text-align: center;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  color: var(--text);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  line-height: 1.3;
+  text-decoration: none !important;
 }
 
-.movie-info p {
-  color: var(--text-secondary);
+.movie-card p {
   font-size: 0.85rem;
-  text-align: center;
-  margin-top: 0.3rem;
-  font-weight: 400;
+  color: var(--text-secondary);
+  margin-top: auto;
+  opacity: 0.9;
+  text-decoration: none !important;
 }
 
-.quality-badge {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: rgba(0, 0, 0, 0.7);
-  color: white;
-  padding: 0.2rem 0.5rem;
-  border-radius: 4px;
-  font-size: 0.7rem;
-  font-weight: bold;
-  text-transform: uppercase;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+.movie-card a {
+  text-decoration: none !important;
+  color: inherit;
 }
 
-/* Grid Container */
+/* Grid container */
 #movie-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-  gap: 1.5rem;
-  padding: 1.5rem;
+  grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
+  gap: 1.3rem;
+  padding: 1.2rem;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+  #movie-container {
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+    gap: 1rem;
+    padding: 1rem;
+  }
+  
+  .movie-card img {
+    height: 220px;
+  }
+}
+
+@media (max-width: 480px) {
+  #movie-container {
+    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+    gap: 0.8rem;
+  }
+  
+  .movie-card img {
+    height: 190px;
+  }
+  
+  .movie-info {
+    padding: 0.5rem 0.4rem;
+  }
 }
 
 /* Pagination */
@@ -244,16 +209,11 @@ header {
 
 .pagination button {
   padding: 0.5rem 1rem;
-  background-color: #228B22;
+  background-color: var(--primary);
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.pagination button:hover {
-  background-color: #1e7b1e;
 }
 
 .pagination button:disabled {
@@ -267,7 +227,6 @@ footer {
   padding: 1.5rem;
   text-align: center;
   margin-top: auto;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .footer-nav {
@@ -282,62 +241,177 @@ footer {
   color: var(--text-secondary);
   text-decoration: none;
   transition: color 0.3s;
-  font-size: 0.9rem;
 }
 
 .footer-nav a:hover {
   color: var(--primary);
 }
 
-/* Mobile Optimizations */
-@media (max-width: 768px) {
+/* Movie Details Page Styles */
+.movie-details-container {
+  max-width: 1200px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.movie-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.movie-poster-container {
+  text-align: center;
+}
+
+.detail-poster {
+  max-width: 100%;
+  height: auto;
+  max-height: 70vh;
+  border-radius: 12px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.3);
+}
+
+.movie-content {
+  color: #fff;
+}
+
+.movie-content h1 {
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.movie-year, .movie-genre {
+  color: #aaa;
+  margin-bottom: 0.5rem;
+}
+
+.movie-description {
+  line-height: 1.6;
+  margin: 1.5rem 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.stream-btn, .download-btn {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  transition: all 0.3s ease;
+  flex: 1;
+}
+
+.stream-btn {
+  background-color: #e50914;
+  color: white;
+}
+
+.download-btn {
+  background-color: #221f1f;
+  color: white;
+  border: 1px solid #444;
+}
+
+.stream-btn:hover {
+  background-color: #f40612;
+  transform: translateY(-2px);
+}
+
+.download-btn:hover {
+  background-color: #333;
+  transform: translateY(-2px);
+}
+
+/* Responsive Design */
+@media (min-width: 768px) {
   header {
-    padding: 1rem;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
   }
 
-  #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 1rem;
-    padding: 1rem;
-  }
-
-  .movie-card img {
-    height: 220px;
-  }
-
-  .movie-info h3 {
-    font-size: 0.95rem;
+  .logo-container {
+    justify-content: flex-start;
   }
 
   .search-bar {
-    flex-direction: column;
+    margin: 0;
   }
 
-  #searchInput, .search-bar button {
+  /* Movie details page responsive */
+  .movie-wrapper {
+    flex-direction: row;
+  }
+  
+  .movie-poster-container {
+    flex: 0 0 40%;
+    position: sticky;
+    top: 20px;
+    align-self: flex-start;
+  }
+  
+  .movie-content {
+    flex: 1;
+  }
+  
+  .action-buttons {
+    justify-content: flex-start;
+  }
+  
+  .stream-btn, .download-btn {
+    flex: 0 1 200px;
+  }
+}
+
+@media (max-width: 767px) {
+  /* Movie details page responsive */
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  .stream-btn, .download-btn {
     width: 100%;
   }
 }
 
 @media (max-width: 480px) {
-  #movie-container {
-    grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+  .logo {
+    max-height: 60px;
   }
 
   .movie-card img {
-    height: 180px;
+    height: 200px;
   }
-
-  .movie-info h3 {
-    font-size: 0.85rem;
-  }
-
-  .movie-info p {
-    font-size: 0.75rem;
-  }
-
-  .category-btn {
-    padding: 0.5rem 1rem;
-    font-size: 0.8rem;
-  }
+}/* Added Back Button Style - Only for movie.html */
+.back-btn {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background-color: var(--primary);
+  color: white;
+  border-radius: 20px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  margin-left: 1rem;
 }
+
+.back-btn:hover {
+  background-color: #218838;
+  transform: translateY(-1px);
+}
+
+@media (max-width: 768px) {
+  .back-btn {
+    margin: 0.5rem auto;
+    display: block;
+    width: fit-content;
+  }
+}:
 
