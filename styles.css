@@ -113,8 +113,7 @@ header {
 .category-btn.active {
   background-color: #228B22;
 }
-
-/* Movie Card Styles */
+/* Movie Card */
 .movie-card {
   background-color: var(--light-dark);
   border-radius: 8px;
@@ -125,53 +124,98 @@ header {
   height: 100%;
   display: flex;
   flex-direction: column;
+  position: relative;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1); /* Adding shadow */
 }
 
+/* Image section of movie card */
 .movie-card img {
   width: 100%;
   height: 260px;
   object-fit: cover;
   object-position: center top;
+  transition: transform 0.3s ease;
 }
 
+/* Hover effect to zoom in on the image */
+.movie-card:hover img {
+  transform: scale(1.05);
+}
+
+/* Movie info section */
 .movie-info {
-  padding: 0.6rem 0.5rem;
+  padding: 0.8rem;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 0.3rem;
+  background: rgba(0, 0, 0, 0.6); /* Adding overlay */
+  color: white; /* Making text white for better contrast */
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transition: all 0.3s ease;
+  opacity: 0;
 }
 
+/* Show the movie info when hovering over the card */
+.movie-card:hover .movie-info {
+  opacity: 1;
+}
+
+/* Title of the movie */
 .movie-card h3 {
-  font-size: 1rem;
+  font-size: 1.2rem;
   margin: 0;
-  color: var(--text);
-  white-space: nowrap;
-  overflow: hidden;
+  color: white;
+  font-weight: bold;
   text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
   line-height: 1.3;
   text-decoration: none !important;
 }
 
+/* Description or extra info */
 .movie-card p {
-  font-size: 0.85rem;
+  font-size: 0.9rem;
   color: var(--text-secondary);
+  opacity: 0.8;
   margin-top: auto;
-  opacity: 0.9;
   text-decoration: none !important;
 }
 
+/* Links for actions */
 .movie-card a {
   text-decoration: none !important;
   color: inherit;
 }
 
-/* Grid container */
+/* Grid container for movie cards */
 #movie-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(165px, 1fr));
   gap: 1.3rem;
   padding: 1.2rem;
+}
+
+/* Play button or additional actions */
+.movie-card .play-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  padding: 1rem;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  display: none;
+}
+
+.movie-card:hover .play-btn {
+  display: block;
 }
 
 /* Mobile Optimizations - Updated to match reference image */
